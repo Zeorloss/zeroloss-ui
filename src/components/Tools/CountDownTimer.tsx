@@ -41,12 +41,14 @@ export default React.memo(function CoundownTimer({
   const days = Math.ceil(remainingTime / daySeconds);
   const daysDuration = days * daySeconds;
 
+  const color = "#efd43b"
+
   return (
     <div className="grid grid-cols-4 grid-rows-1 place-items-center">
       <div>
         <CountdownCircleTimer
           {...timerProps}
-          colors="#46ADAA"
+          colors={color}
           duration={daysDuration}
           initialRemainingTime={remainingTime}
           key={uniqueId()}
@@ -55,14 +57,14 @@ export default React.memo(function CoundownTimer({
             <span style={{ color }}>{renderTime(getTimeDays(daysDuration - elapsedTime))}</span>
           )}
         </CountdownCircleTimer>
-        <div className="text-xs mt-2" style={{ color: "#46ADAA" }}>
+        <div className="text-xs mt-2" style={{ color: color }}>
           Days
         </div>
       </div>
       <div>
         <CountdownCircleTimer
           {...timerProps}
-          colors="#46ADAA"
+          colors={color}
           duration={daySeconds}
           initialRemainingTime={remainingTime % daySeconds}
           onComplete={(totalElapsedTime) => ({
@@ -74,14 +76,14 @@ export default React.memo(function CoundownTimer({
             <span style={{ color }}>{renderTime(getTimeHours(daySeconds - elapsedTime))}</span>
           )}
         </CountdownCircleTimer>
-        <div className="text-xs mt-2" style={{ color: "#46ADAA" }}>
+        <div className="text-xs mt-2" style={{ color: color }}>
           Hours
         </div>
       </div>
       <div>
         <CountdownCircleTimer
           {...timerProps}
-          colors="#46ADAA"
+          colors={color}
           duration={hourSeconds}
           initialRemainingTime={remainingTime % hourSeconds}
           onComplete={(totalElapsedTime) => ({
@@ -93,14 +95,14 @@ export default React.memo(function CoundownTimer({
             <span style={{ color }}>{renderTime(getTimeMinutes(hourSeconds - elapsedTime))}</span>
           )}
         </CountdownCircleTimer>
-        <div className="text-xs mt-2" style={{ color: "#46ADAA" }}>
+        <div className="text-xs mt-2" style={{ color: color }}>
           Minutes
         </div>
       </div>
       <div>
         <CountdownCircleTimer
           {...timerProps}
-          colors="#46ADAA"
+          colors={color}
           duration={minuteSeconds}
           initialRemainingTime={remainingTime % minuteSeconds}
           onComplete={(totalElapsedTime) => {
@@ -114,7 +116,7 @@ export default React.memo(function CoundownTimer({
         >
           {({ elapsedTime, color }) => <span style={{ color }}>{renderTime(getTimeSeconds(elapsedTime))}</span>}
         </CountdownCircleTimer>
-        <div className="text-xs mt-2" style={{ color: "#46ADAA" }}>
+        <div className="text-xs mt-2" style={{ color: color }}>
           Seconds
         </div>
       </div>
