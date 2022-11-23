@@ -11,6 +11,6 @@ body{
 }
 
 .shadower{
-
+    color: #8f8c8c;
     box-shadow: 14px -13px 12px -7px rgba(0,0,0,0.1),-28px 21px 20px -12px rgba(0,0,0,0.1);
 }

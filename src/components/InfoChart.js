@@ -1,70 +1,91 @@
 import React, { Component } from "react";
-import CanvasJSReact from "../assets/canvasjs.react";
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+import { PieChart, Pie, Cell, Tooltip, Legend, LabelList, ResponsiveContainer } from "recharts";
+
 
 class InfoChart extends Component {
   render() {
-    const options = {
-      theme: "light",
-      animationEnabled: true,
-      textColor: "blue",
-      title: {
-        text: "Total Supply: 533,000,000",
+    const COLORS = ["#8884d8", "#82ca9d", "#FFBB28", "#FF8042", "#AF19FF"];
+   const pieData = [
+      {
+         name: "ZEROLOSS Ecosystem",
+         value: 50
       },
-      data: [
-        {
-          type: "pie",
-          startAngle: 75,
-          toolTipContent: "<b>{desc}</b>: {y}%",
-          showInLegend: "true",
-          legendText: "{label}",
-          indexLabelFontSize: 16,
-          indexLabel: "{label} - {y}%",
-          dataPoints: [
-            {
-              y: 50,
-              label: "ZEROLOSS Ecosystem",
-              desc: "50% LP locked up",
-              fill: "gold",
-            },
-            {
-              y: 11.72,
-              label: "Early Access",
-              desc: "11.72% vested and linearly distributed",
-            },
-            {
-              y: 9,
-              label: "Development",
-              desc: " 9% linearly unlocked over a period of 24months",
-            },
-            { y: 10.28, label: "Marketing", desc: "10.28% linearly unlocked" },
-            {
-              y: 8,
-              label: "Team",
-              desc: "8% vested and linearly unlocked to pay the working team",
-            },
-            { y: 11, label: "Treasury", desc: "11% vested and locked up" },
-          ],
-        },
-      ],
-      
-    };
+      {
+         name: "Early Access",
+         value: 11.72
+      },
+      {
+         name: "Development",
+         value: 9
+      },
+      {
+         name: "Marketing",
+         value: 10.28
+      },
+      {
+         name: "Team",
+         value: 8
+      },
+      {
+        name: "Treasury",
+        value: 11
+      }
+   ];
+
+   const CustomTooltip = ({ active, payload, label }) => {
+    if (active) {
+       return (
+       <div
+          className="custom-tooltip"
+          style={{
+             backgroundColor: "#ffff",
+             padding: "5px",
+            //  border: "1px solid #cccc"
+          }}
+       >
+          <label>{`${payload[0].name} : ${payload[0].value}%`}</label>
+       </div>
+    );
+ }
+ return null;
+};
+    
+
 
     return (
-      <div >
+      <div className="bg-white" >
         <h1
           style={{ textAlign: "center"}}
         //   className="mb-3 h3-font font-b--700"
         >
           ZEROLOSS TOKENOMICS
         </h1>
-        <CanvasJSChart
-          options={options}
-          //   onRef={(ref) => (this.chart = ref)}
-        />
-        {
-          options.info /*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/
-        }
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart   >
+        <Pie
+          data={pieData}
+          color="#000000"
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={120}
+          fill="#8884d8"
+          isAnimationActive="true"
+        >
+          {pieData.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+          ))}
+
+          <LabelList stroke="#000" offset={-20} dataKey="name" position="outside" />
+        </Pie>
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+          </PieChart>
+      </ResponsiveContainer>
       </div>
     );
   }
