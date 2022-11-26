@@ -7,8 +7,8 @@ import Section from "../components/Section";
 function zerolosspad() {
   return (
     <Layout>
-      <Section padding containerClass="bg-[#070124]">
-        <div>
+      <Section padding containerClass="bg-[#070124]" className="flex flex-row justify-end items-center">
+        <div className="max-w-md w-full">
           <StaticImage
             src="../images/launchpadz-page-hero-image.png"
             alt="launchpadz-page-hero-image"
