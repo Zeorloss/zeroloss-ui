@@ -31,7 +31,7 @@ function zerolosspad() {
       </Section>
       <Section>
         <h2>No fees, Low risk, No rug polls, only rewards</h2>
-        <p>
+        <p className="text-white">
           Zero risk IDO enables promising projects to raise capital on the BSC.
           Investors are safe to invest in early-stage projects through our KYC
           system and strict due diligence. We make sure only audited, carefully
