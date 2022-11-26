@@ -12,14 +12,18 @@ export const BASE_BSC_SCAN_URLS = {
 export const BASE_BSC_SCAN_URL = BASE_BSC_SCAN_URLS[ChainId.MAINNET];
 
 export const addresses = {
-  goldenCoin: {
-    56: "0xf47D10f3f6683F71dc42DBBAf8223F49612f1d89",
+  zltSale: {
+    56: "0x02f49F484da3c594576622a1116c05E295F47D1d",
     97: "",
   },
   busd: {
     56: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     97: "",
   },
+  zlt: {
+    56: "0x05D8762946fA7620b263E1e77003927addf5f7E6",
+    97: ""
+  }
 };
 
 export const networkList = {

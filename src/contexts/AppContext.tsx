@@ -1,6 +1,6 @@
+import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
 import BigNumber from "bignumber.js";
 import { isAddress } from "ethers/lib/utils";
-import React, { useEffect, useState, createContext, useCallback, useContext } from "react";
 import { addresses, networkList } from "../config";
 import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
@@ -50,7 +50,7 @@ export default function AppContext({ children }: { children: React.ReactNode }) 
   const [balance, setBalance] = useState("0");
   // Refferal
   const [refAddress, setRefAddress] = useState("");
-  /* A workaround, I use this state to trigger an update on this context and
+  /* A workaround, I use this state to trigger an update in this context and
   Refetch the tokenBalances when it changes. */
   const [trigger, setTrigger] = useState(false);
   const refFromParams = useQuery().get("ref");

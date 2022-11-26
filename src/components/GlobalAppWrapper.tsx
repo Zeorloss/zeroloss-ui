@@ -4,14 +4,13 @@ import { RefreshContextProvider } from "../contexts/RefreshContext";
 import { ToastsProvider, ToastListener } from "../contexts/ToastContext";
 import { getLibrary } from "../utils/web3React";
 import ModalProvider from "./Modal/ModalContext";
-import { Updaters } from "./Updaters";
 import AppWalletProvider from "../contexts/AppContext";
 
 /**
  * This component is used to share state accross all sections of the site without unmounting on page
  * navigation.
  */
-export default function GlobalAppWrapper(props) {
+export default function GlobalAppWrapper(props: { children: React.ReactNode; path: string }) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <AppWalletProvider>
@@ -19,7 +18,6 @@ export default function GlobalAppWrapper(props) {
           <ToastListener />
           <RefreshContextProvider>
             <ModalProvider>
-              <Updaters />
               {props.children}
             </ModalProvider>
           </RefreshContextProvider>

@@ -15,6 +15,8 @@ import { useGasPrice } from "./useGasPrice";
 export function useCallWithGasPrice() {
   const gasPrice = useGasPrice();
 
+  
+
   const callWithGasPrice = useCallback(
     async (
       contract: Contract,
@@ -28,7 +30,7 @@ export function useCallWithGasPrice() {
         ...methodArgs,
         hasManualGasPriceOverride
           ? { ...overrides }
-          : { ...overrides, gasPrice }
+          : { ...overrides, gasPrice}
       );
       return tx;
     },
