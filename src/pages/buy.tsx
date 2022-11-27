@@ -25,7 +25,7 @@ import {
 } from "../utils/addressHelpers";
 import CustomButton from "../components/Buttons/Button";
 import { CallSignerType } from "../types";
-import { BIG_TEN } from "../utils/bigNumber";
+import { BIG_TEN } from "../utils/bignumber";
 import erc20 from "../config/abi/erc20.json";
 import { addresses } from "../config";
 import { ethers } from "ethers";
