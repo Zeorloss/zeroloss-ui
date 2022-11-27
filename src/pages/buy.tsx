@@ -234,20 +234,6 @@ const BuyPage = ({ location }: PageProps) => {
             />
           </div>
         </section>
-
-        <section>
-            <div>
-            <h2>Contract Address</h2>
-            <p className="break-words">0xa5f2f61da2628D123430329D4c15720D18725f3F</p>
-          </div>
-          <div>
-            <h2>Beyond The Moon</h2>
-            <ul className="list-disc list-inside pl-2">
-              <li>Pancakeswap and Poocoin listing on 1st July, 2022 @ $0.7</li>
-              <li>Presale 1 GCOIN = 0.5 BUSD</li>
-            </ul>
-          </div>
-            </section>
       </section>
     </Layout>
   );
