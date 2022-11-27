@@ -4,10 +4,9 @@ import { motion } from 'framer-motion'
 import { Link } from 'gatsby'
 import {GiHamburgerMenu} from "react-icons/gi"
 import {AiOutlineClose} from "react-icons/ai"
-
+import { menuItem } from '../data/content'
 
 const Header = () => {
-    const menuItem = ["Home", "LaunchPad", "ZeroLossPad", "Rug Checker", "LightPaper", "FAQ"]
     const [navOpen, setNavOpen] = useState(false)
     const toggle=()=> setNavOpen(!navOpen)
   return (
@@ -21,14 +20,14 @@ const Header = () => {
             transition={{ ease: "easeOut", duration: .4 }}
          className={` sm:block  lg:static sm:ml-auto absolute top-[80px] h-[100vh] sm:h-min w-screen sm:w-auto bg-black `} >
             <menu className='flex flex-col sm:flex-row basis-fulls '>
-                {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><Link to={`/${item==="Home"? "": item.toLowerCase()}`}>{item}</Link></li>)}
+                {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><Link to={item.url.toLowerCase()}>{item.linkText}</Link></li>)}
             </menu>
         </motion.nav>
         <div className='ml-auto lg:ml-10 flex gap-2'>
             <Link to='/buy'>
                 <Button text="Buy"/>
             </Link>
-            <Button text="Defi" bg="bg-yellow-400"/>
+            <Button text="Defi" bg="bg-yellow-400 " styling="py-1 px-2 rounded-md py-1 px-2"/>
             {/* <GrClose color='red' size="200px"/> */}
             {navOpen?<AiOutlineClose onClick={toggle} className="md:hidden"  color='white' size="30px"/>:<GiHamburgerMenu onClick={toggle} color="yellow" className='basis-full md:invisible' size="30px" />
              }

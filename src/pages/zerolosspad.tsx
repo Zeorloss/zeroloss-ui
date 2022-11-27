@@ -7,8 +7,8 @@ import Section from "../components/Section";
 function zerolosspad() {
   return (
     <Layout>
-      <Section padding containerClass="bg-[#070124]" className="flex flex-row justify-end items-center">
-        <div className="max-w-md w-full">
+      <Section padding containerClass="bg-[#070124]" className="flex flex-wrap justify-between items-center text-white gap-10 text-center md:text-left">
+        <div className="max-w-mds w-full md:basis-5/12">
           <StaticImage
             src="../images/launchpadz-page-hero-image.png"
             alt="launchpadz-page-hero-image"
@@ -16,10 +16,10 @@ function zerolosspad() {
             placeholder="blurred"
           />
         </div>
-        <div>
-          <h1>IDO LaunchPad</h1>
-          <p>
-            Use <b className="text-primary-600">Zeroloss</b> Token ZLT, to buy
+        <div className="md:basis-5/12" >
+          <h1 className="text-2xl">IDO LaunchPad</h1>
+          <p className="mb-10">
+            Use <b className="text-primary-600 ">Zeroloss</b> Token ZLT, to buy
             in early in IDO projects. ZEROLOSS IDO will require new projects to
             lock a large share of their liquidity and team tokens on our third
             party partner’s locker platform. We make it easy, safe and secure to
@@ -29,14 +29,18 @@ function zerolosspad() {
           <Button>Buy ZLT for IDO</Button>
         </div>
       </Section>
-      <Section>
-        <h2>No fees, Low risk, No rug polls, only rewards</h2>
-        <p className="text-white">
+      <Section containerClass="bg-white text-black text-center pt-32 pb-40" >
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">No fees, Low risk, No rug polls, only rewards</h2>
+        <p>
           Zero risk IDO enables promising projects to raise capital on the BSC.
           Investors are safe to invest in early-stage projects through our KYC
           system and strict due diligence. We make sure only audited, carefully
           vetted, and analyzed blockchain projects will be chosen for IDO.
         </p>
+      </Section>
+
+      <Section containerClass="bg-white">
+        <img src="/images/launch2.png" alt="asdf" />
       </Section>
     </Layout>
   );

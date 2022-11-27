@@ -14,7 +14,7 @@ const Brands = () => {
       </div>
       <div>
         <span>and more exchanges...</span>
-        <Button styling="p-10"  bg="bg-yellow-400" text="Buy ZLT"/>
+        <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Buy ZLT"/>
       </div>
     </section>
   )
