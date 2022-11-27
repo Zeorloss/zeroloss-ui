@@ -20,18 +20,18 @@ const RoadMap = () => {
         </div>
         <div>
             <span className='mb-5 bg-white w-6 h-6 block m-auto rounded-full border-solid border-black border-2'></span>
-            <p>Q3 2021</p>
+            <p>Q1 2022</p>
             <p>Onboarding New Partnerships</p>
         </div>
         <div>
             <span className='mb-5 bg-white w-6 h-6 block m-auto rounded-full border-solid border-black border-2'></span>
-            <p>Q1 2022</p>
+            <p>Q2 2022</p>
             <p>Token Presale</p>
             <p>Launch of <strong>ZEROLOSS DeFi dAPP</strong>; RugChecker, Stake, SmartTrade, Pool, Mine and Farm</p>
         </div>
         <div>
             <span className='mb-5 bg-white w-6 h-6 block m-auto rounded-full border-solid border-black border-2'></span>
-            <p>Q2 2022</p>
+            <p>Q1 2023</p>
             <p>Architecting of ZEROLOSS NFT Minting and Exchange Platform</p>
             <p>Begin development of cross-chain platform</p>
         </div>

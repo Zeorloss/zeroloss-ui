@@ -11,7 +11,7 @@ const Support = () => {
         <img src='/images/metamask.png' alt='asdfasdffdlkja'  width="250px"/>
         <img src='/images/ledger.png' alt='asdflasdkja' width="250px" />
       </div>
-      <Button styling="p-10"  bg="bg-yellow-400" text="Token Explored"/>
+      <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Token Explored"/>
     </section>
   )
 }

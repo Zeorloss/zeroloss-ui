@@ -21,6 +21,32 @@ export const perks = [
   },
 ];
 
+export const menuItem = [
+  {
+      linkText: "Home",
+      url: "/",
+  },
+  {
+      linkText: "Launch App",
+      url: "/launchapp",
+  },
+  {
+      linkText: "ZerolossPad",
+      url: "/zerolosspad",
+  },
+  {
+      linkText: "Rug Checker",
+      url: "https://scamsniper.net",
+  },
+  {
+      linkText: "LightPaper",
+      url: "https://drive.google.com/file/d/1KvACbgj-2-ZrsM8v_UHj7BuV__OjoewV/view",
+  },
+  {
+      linkText: "FAQ",
+      url: "/faq",
+  },
+]
 export const item = [
   {
     icon: "worlds.png",

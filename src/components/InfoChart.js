@@ -1,3 +1,4 @@
+import { Link } from "gatsby";
 import React, { Component } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, LabelList, ResponsiveContainer } from "recharts";
 
@@ -86,6 +87,15 @@ class InfoChart extends Component {
         <Legend />
           </PieChart>
       </ResponsiveContainer>
+
+      <div className="text-center px-6 font-normal">
+        <p>zDAO will be minted as token to secure the ZEROLOSS DAO </p>
+        <p>A fixed amount of ZLT will be voted for and burnt to mint zDAO,
+             this will ensure the sustainable interoperability of ZEROLOSS 
+             with stable coins and BNB. Read our white paper <Link to="#"><span className="text-blue-900 font-bold">here</span></Link></p>
+        <p>ZEROLOSS is the utility and dApp, ZLT is the currency </p> 
+        <p>For more information about ZEROLOSS send us an email <Link to="#" >here</Link> or chat with our team on discord <Link to="#">here</Link></p>
+      </div>
       </div>
     );
   }
