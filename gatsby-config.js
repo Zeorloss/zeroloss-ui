@@ -5,6 +5,9 @@ module.exports = {
   siteMetadata: {
     siteUrl: `https://zeroloss.finance`,
   },
+  flags: {
+    DEV_SSR: true
+  },
   trailingSlash: "never",
   graphqlTypegen: false,
   plugins: [
