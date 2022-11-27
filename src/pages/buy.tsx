@@ -30,8 +30,8 @@ import erc20 from "../config/abi/erc20.json";
 import { addresses } from "../config";
 import { ethers } from "ethers";
 import { RefreshContext } from "../contexts/RefreshContext";
-import { isAddress } from "../utils";
 import CopyToClipboard from "../components/Tools/copyToClipboard";
+import { PageProps } from "gatsby";
 
 const buyZLT = async (amount: string, ref: string, signer: CallSignerType) => {
   const contract = getZltContract(signer);
@@ -53,7 +53,7 @@ const checkTokenAllowance = async (
   return new BigNumber(_hex);
 };
 
-const buy = () => {
+const BuyPage = ({ location }: PageProps) => {
   const [fetching, setFetching] = useState(false);
   const {
     refAddress,
@@ -227,7 +227,10 @@ const buy = () => {
             token purchases instantly to your wallet.
           </p>
           <div className="">
-            <CopyToClipboard canCopy={active && account != null} content={`${origin}/?ref=${account}`} />
+            <CopyToClipboard
+              canCopy={active && account != null}
+              content={`${origin}/?ref=${account}`}
+            />
           </div>
         </section>
       </section>
@@ -358,6 +361,6 @@ const TextInput = ({
   );
 };
 
-export default buy;
+export default BuyPage;
 
 export const Head = () => <title>Buy Page</title>;

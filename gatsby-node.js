@@ -1,5 +1,13 @@
-exports.onCreateWebpackConfig = ({ plugins, actions }) => {
+exports.onCreateWebpackConfig = ({ plugins, loaders, actions }) => {
   actions.setWebpackConfig({
+    module: {
+      rules: [
+        {
+          test: /boxicons/,
+          use: loaders.null(),
+        },
+      ],
+    },
     // Work around for Buffer is undefined:
     // https://github.com/webpack/changelog-v5/issues/10
     plugins: [
