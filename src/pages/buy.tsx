@@ -162,52 +162,6 @@ const BuyPage = ({ location }: PageProps) => {
   return (
     <Layout>
       <section className="text-white px-8 md:max-w-[80%] m-auto">
-      <section  className=" md:text-center">
-                <h1 className="text-5xl font-bold text-yellow-400 my-10 leading-slug">Zeroloss Token, The New generation platform.</h1>
-                <p className="my-10 md:text-xl">
-                    Zeroloss is a Decentralized peer to peer digital currency just like Bitcoin it's a new medium of exchange for
-                    goods and services. you can use ZLT to pay for products and services within and outside Zeroloss Connect
-                    (Z-CONNECT) ecosystem. Zeroloss is also a digital asset that increases and decreases in price over time just
-                    like bitcoin. this creates a golden opportunity for investors to make good profits by buying low and selling
-                    high.
-                </p>
-                <p className="my-10 md:text-xl">
-                    ZLT can be exchanged to bitcoin, binance coin(BNB smart chain, BUSD), Ethereum, US dollars, and and other
-                    currencies all over the world.
-                </p>
-                <p className="my-10 md:text-xl">
-                    ZLT investors are in charge of their investment. which means you can buy and sale anytime you want. Even
-                    the founders of GCOIN don't have control over ZLT. It is a democratic digital currency. GCOIN is money of
-                    the people, by the people and for the people
-                </p>
-            </section>
-
-            <section className="bg-[#191039]/90 m-auto p-5 w-full flex flex-col md:flex-row rounded md:justify-between !max-w-4xl">
-                <div>
-                    <h2 className="uppercase text-white text-3xl font-semibold mb-4">Tokenomics</h2>
-                    <p>Total supply = 500,000</p>
-                    <ol className="list-decimal list-inside pl-3 space-y-1 text-base">
-                        <li>Private Sale = 5%</li>
-                        <li>Pre-sale = 25%</li>
-                        <li>Liquidity = 30% (to be locked for 3 years)</li>
-                        <li>Marketing and partnerships/advisory = 10%</li>
-                        <li>Products development = 10%</li>
-                        <li>Airdrops = 5%</li>
-                        <li>Referral rewards = 5%</li>
-                        <li>Buy back = 5%</li>
-                        <li>Charity = 5%</li>
-                    </ol>
-                </div>
-
-                <div>
-                    <h2 className="uppercase text-white text-3xl font-semibold my-4">Benefits</h2>
-                    <ol className="list-decimal list-inside pl-3 space-y-1 text-base">
-                        <li>Referral Count is Unlimited</li>
-                        <li>10% BUSD Per Referral</li>
-                    </ol>
-                </div>
-            </section>
-
 
         <h1 className="text-5xl text-center font-bold text-yellow-400 my-10 leading-slug">
           Zeroloss Token Sale.

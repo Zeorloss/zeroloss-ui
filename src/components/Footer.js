@@ -2,10 +2,17 @@ import { Link } from 'gatsby'
 import { AiFillTwitterCircle, } from 'react-icons/ai'
 import { AiFillLinkedin } from 'react-icons/ai'
 import { AiFillMediumCircle } from 'react-icons/ai'
-import React from 'react'
-import "boxicons"
+import React, { useEffect } from 'react'
 
 const Footer = () => {
+
+  useEffect(()=>{
+    async function dynamicImportModule(){
+      const DynamicModule = (await import('boxicons'))
+    }
+
+    dynamicImportModule()
+  }, [])
   return (
     <footer className='text-white flex flex-col flex-wrap items-center p-5'>
         <img className='max-w-[300px]' src='/images/tZeroloss-footer.png' alt='zeroloss foooter logo' />
