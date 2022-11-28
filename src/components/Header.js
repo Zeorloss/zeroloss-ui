@@ -20,7 +20,7 @@ const Header = () => {
             transition={{ ease: "easeOut", duration: .4 }}
          className={` sm:block  lg:static sm:ml-auto absolute top-[80px] h-[100vh] sm:h-min w-screen sm:w-auto bg-black z-50`} >
             <menu className='flex flex-col sm:flex-row basis-fulls '>
-                {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><a download href={item.url.toLowerCase()}>{item.linkText}</a></li>)}
+                {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><a {...(item.download? "download": "")} href={item.url.toLowerCase()}>{item.linkText}</a></li>)}
             </menu>
         </motion.nav>
         <div className='ml-auto lg:ml-10 flex gap-2'>

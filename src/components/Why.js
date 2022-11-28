@@ -11,7 +11,7 @@ const Why = () => {
             <p className='my-5 leading-relaxed'>{"Zeroloss is a fork in the road. It takes us from where we’ve been to where we’re destined to go: a global society that is secure, transparent, and fair, and which serves the many as well as the few. Like the technological revolutions that have come before, it offers a new template for how we work, interact, and create, as individuals, businesses, and societies. Leap on the ZEROLOSS Rug-proof dApp to Profit in Defi 3.0."}</p>
         </div>
         <div className='basis-5/12 '>
-            <img className='block m-auto' src={"/images/Zeroloss_inside.png"} alt="zeroloss logo image" width="300px" />
+            <img className='block m-auto' src={"/images/Zeroloss_inside.png"} alt="zeroloss logo" width="300px" />
         </div>
     </section>
   )

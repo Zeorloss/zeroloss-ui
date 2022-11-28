@@ -364,4 +364,4 @@ const TextInput = ({
 
 export default BuyPage;
 
-export const Head = () => <title>Buy Page</title>;
+export const Head = () => <title>Buy | Zeroloss</title>;

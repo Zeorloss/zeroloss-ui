@@ -170,3 +170,5 @@ const faq = () => {
 }
 
 export default faq
+
+export const Head = () => <title>Faq | Zeroloss</title>

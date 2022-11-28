@@ -25,22 +25,31 @@ export const menuItem = [
   {
       linkText: "Home",
       url: "/",
+      download: "false",
   },
   {
       linkText: "Launch App",
       url: "/launchapp",
+      download: "false",
+
   },
   {
       linkText: "ZerolossPad",
       url: "/zerolosspad",
+      download: "false",
+
   },
   {
       linkText: "Rug Checker",
       url: "https://scamsniper.net",
+      download: "false",
+
   },
   {
       linkText: "LightPaper",
       url: "/litepaper.pdf",
+      download: "true",
+
   },
   {
       linkText: "FAQ",

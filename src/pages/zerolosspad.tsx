@@ -50,3 +50,5 @@ function zerolosspad() {
 }
 
 export default zerolosspad;
+
+export const Head = () => <title>Pad | Zeroloss</title>
