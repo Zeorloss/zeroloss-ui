@@ -40,7 +40,7 @@ export const menuItem = [
   },
   {
       linkText: "LightPaper",
-      url: "https://drive.google.com/file/d/1KvACbgj-2-ZrsM8v_UHj7BuV__OjoewV/view",
+      url: "/litepaper.pdf",
   },
   {
       linkText: "FAQ",
