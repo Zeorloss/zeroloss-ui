@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './Button'
+import {Link} from "gatsby"
 
 const Brands = () => {
   return (
@@ -7,14 +8,16 @@ const Brands = () => {
       <h2 className='text-3xl font-bold mb-5'>AS SEEN ON TOP INDUSTRY BRANDS</h2>
       <p>Zeroloss partners with worlds leading companys</p>
       <div className='flex flex-wrap justify-center gap-10 my-10'>
-        <img src='/images/pancake.png' alt='asdflkja'  width="250px" />
-        <img src='/images/dodo-logo.png' alt='asdfasdffdlkja'  width="250px"/>
-        <img src='/images/ledger.png' alt='asdflasdkja' width="250px" />
-        <img src='/images/dodo-logo.png' alt='asdfasdffdlkja'  width="250px"/>
+        <img src='/images/kryptolite.png' alt='kryptolite offical logo' className='w-40 block' height="10px" />
+        <img src='/images/binance-logo.jpg' alt='Binance official logo'  width="250px"/>
+        <img src='/images/ledger.png' alt='ledger official logo' width="250px" />
+        <img src='/images/pancake.png' alt='pancake-swap official logo'  width="250px" />
       </div>
       <div>
         <span>and more exchanges...</span>
-        <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Buy ZLT"/>
+        <Link to="/buy">
+          <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Buy ZLT"/>
+        </Link>
       </div>
     </section>
   )

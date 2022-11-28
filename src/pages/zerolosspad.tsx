@@ -3,6 +3,7 @@ import React from "react";
 import Button from "../components/Buttons/Button";
 import Layout from "../components/Layout";
 import Section from "../components/Section";
+import {Link} from "gatsby"
 
 function zerolosspad() {
   return (
@@ -24,9 +25,11 @@ function zerolosspad() {
             lock a large share of their liquidity and team tokens on our third
             party partner’s locker platform. We make it easy, safe and secure to
             lock any BEP-20 based token in seconds protecting investors from
-            ‘rug pulls’. Hold 2000 ZLT to get whitelisted for IDO's
+            ‘rug pulls’. Hold 100,000 ZLT to get whitelisted for IDO's
           </p>
-          <Button>Buy ZLT for IDO</Button>
+          <Link to="/buy">
+            <Button>Buy ZLT for IDO</Button>
+          </Link>
         </div>
       </Section>
       <Section containerClass="bg-white text-black text-center pt-32 pb-40" >

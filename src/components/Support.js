@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from './Button'
+import {Link} from "gatsby"
 
 const Support = () => {
   return (
@@ -11,7 +12,9 @@ const Support = () => {
         <img src='/images/metamask.png' alt='asdfasdffdlkja'  width="250px"/>
         <img src='/images/ledger.png' alt='asdflasdkja' width="250px" />
       </div>
-      <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Token Explored"/>
+      <Link to="https://bscscan.com/token/0x05d8762946fa7620b263e1e77003927addf5f7e6">
+        <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Token Explorer"/>
+      </Link>
     </section>
   )
 }

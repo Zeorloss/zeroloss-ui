@@ -8,7 +8,7 @@ const launchapp = () => {
   return (
     <Layout>
         <section className="px-10 lg:h-[80vh] flex flex-wrap-reverse lg:flex-wrap justify-between items-center text-white">
-            <div className='md:basis-5/12'>
+            <div className='md:basis-5/12 flex flex-col flex-wrap'>
                 <h1 className='text-3xl lg:text-5xl font-bold mb-4'><span className='text-primary-600'>ZEROLOSS</span>FINANCE</h1>
                 <p className='text-sm text-gray-300'>ZEROLOSS FINANCE is a DEX built for ZEROLOSS Ecosystem on Binance Smart Chain</p>
                 <p className='text-primary-600 font-bold'>STAKE, FARM, POOL, EARN</p>

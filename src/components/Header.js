@@ -27,7 +27,9 @@ const Header = () => {
             <Link to='/buy'>
                 <Button text="Buy"/>
             </Link>
-            <Button text="Defi" bg="bg-yellow-400 " styling="py-1 px-2 rounded-md py-1 px-2"/>
+            <Link to="/launchapp">
+                <Button text="Defi" bg="bg-yellow-400 " styling="py-1 px-2 rounded-md py-1 px-2"/>
+            </Link>
             {/* <GrClose color='red' size="200px"/> */}
             {navOpen?<AiOutlineClose onClick={toggle} className="md:hidden"  color='white' size="30px"/>:<GiHamburgerMenu onClick={toggle} color="yellow" className='basis-full md:invisible' size="30px" />
              }

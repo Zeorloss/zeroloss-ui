@@ -1,6 +1,7 @@
 import React from 'react'
 import Typewriter from 'typewriter-effect';
 import Button from '../Button';
+import {Link} from "gatsby"
 
 const Landing = () => {
   return (
@@ -33,8 +34,9 @@ const Landing = () => {
 
             <p className=' md:border-l-8 md:border-solid md:mt-14 md:border-b-stone-800 mt-4 md:text-left sm:pl-2'>DeFi 3.0 dApp | ZeroVerse POWERED BY ZLT</p>
             <p className='mt-4 md:mt-16'> Zeroloss is the utility, ZLT is the currency with PMM algorithm.</p>
-
-            <Button styling="text-yellow-400 m-auto block md:m-0 mt-4 py-1 px-2 rounded-md" text="Buy ZLT"></Button>
+            <Link to="/buy">
+              <Button styling="text-yellow-400 m-auto block md:m-0 mt-4 py-1 px-2 rounded-md" text="Buy ZLT"></Button>
+            </Link>
         </div>
         <div className='basis-5/12'>
             <img src='/images/zeroloss-dev1.png' className="max-w-xs md:max-w-full " alt='landing data from' />
