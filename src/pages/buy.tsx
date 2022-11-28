@@ -169,7 +169,7 @@ const BuyPage = ({ location }: PageProps) => {
         <section className="text-center space-y-5 relative">
           <div className="absolute top-40 left-0 w-56 opacity-40">
             <img
-              alt=""
+              alt="gcoin-logo image"
               src="../images/bg-gcoin-logo.png"
               placeholder="blurred"
             />

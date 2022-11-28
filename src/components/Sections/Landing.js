@@ -39,7 +39,7 @@ const Landing = () => {
             </Link>
         </div>
         <div className='basis-5/12'>
-            <img src='/images/zeroloss-dev1.png' className="max-w-xs md:max-w-full " alt='landing data from' />
+            <img src='/images/zeroloss-dev1.png' className="max-w-xs md:max-w-full " alt='landing from' />
         </div>
     </div>
 

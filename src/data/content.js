@@ -51,16 +51,19 @@ export const item = [
   {
     icon: "worlds.png",
     lead: "Decentralized",
+    alt: "world logo",
     sub: "DeFi protocol, focused on the purpose of value creation, with a new financial algorithm to make the store of value appreciate with time and interoperability at its core.",
   },
   {
     icon: "together.png",
     lead: "POE",
+    alt: "togethernes logo",
     sub: "The core interoperability Algorithm model of ZEROLOSS As users stake there crypto assets the POE algorithm redistributes profits and a drip pool is constantly grown",
   },
   {
     icon: "unbankedz.png",
     lead: "Global Adoption",
+    alt: "banking logo",
     sub: "ZEROLOSS is focused on redesigning the way decentralized finance (DeFi) is structured to work. We are evolving how DeFi works completely while delivering the most robust ecosystem ever seen in Defi's future advancements DeFi 3.0.",
   },
 ];

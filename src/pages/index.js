@@ -1,4 +1,3 @@
-import { Link } from "gatsby"
 import * as React from "react"
 import Brands from "../components/Brands"
 import BuyAndSell from "../components/BuyAndSell"

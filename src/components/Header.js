@@ -18,7 +18,7 @@ const Header = () => {
             animate={{left: navOpen? 0: -1000, opacity: 1}}
             initial={{left: -1000, opacity: 0}}
             transition={{ ease: "easeOut", duration: .4 }}
-         className={` sm:block  lg:static sm:ml-auto absolute top-[80px] h-[100vh] sm:h-min w-screen sm:w-auto bg-black `} >
+         className={` sm:block  lg:static sm:ml-auto absolute top-[80px] h-[100vh] sm:h-min w-screen sm:w-auto bg-black z-50`} >
             <menu className='flex flex-col sm:flex-row basis-fulls '>
                 {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><Link to={item.url.toLowerCase()}>{item.linkText}</Link></li>)}
             </menu>

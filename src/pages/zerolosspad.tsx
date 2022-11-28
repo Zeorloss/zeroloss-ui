@@ -43,7 +43,7 @@ function zerolosspad() {
       </Section>
 
       <Section containerClass="bg-white">
-        <img src="/images/launch2.png" alt="asdf" />
+        <img src="/images/launch2.png" alt="lauch page image" />
       </Section>
     </Layout>
   );

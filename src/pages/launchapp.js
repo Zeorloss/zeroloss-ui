@@ -1,8 +1,6 @@
-import { StaticImage } from 'gatsby-plugin-image'
 import React from 'react'
 import Button from '../components/Button'
 import Layout from '../components/Layout'
-import Section from '../components/Section'
 
 const launchapp = () => {
   return (
@@ -23,7 +21,7 @@ const launchapp = () => {
             </div>
 
             <div className='max-w-mds w-full md:basis-5/12 '>
-              <img src='/images/defi.png' alt="asasdf"/>
+              <img src='/images/defi.png' alt="defi image"/>
             </div>
         </section>
     </Layout>

@@ -39,7 +39,7 @@ const faq = () => {
                   <p>ZEROLOSS Light Paper</p>
                   <p>PMM Algorithm is the core interoperability model of ZEROLOSS! ZLT is the utility Token of ZEROLOSS 
                     digital blockchain ledger that carries the store of value and interoperability,</p>
-                  <p className='text-primary-400'><Link to='https://drive.google.com/file/d/1k9ONuohtVZF-g1uhiQd5q1VyEWQM-SYZ/view?usp=sharing'>Read more...</Link></p>
+                  <p className='text-primary-400'><a download href='/litepaper.pdf'>Read more...</a></p>
                 </div>
               </div>
             </div>
@@ -97,10 +97,10 @@ const faq = () => {
 
                   <p>You will then be given your backup phrase. Write this down somewhere safe. Don't give out your Recovry phrase</p>
                   <p>Connect Your MetaMask With Binance Smart Chain</p>
-                  <img src='/images/metamaskbsc-faq.png' />
+                  <img src='/images/metamaskbsc-faq.png' alt='metamask app screenshoot' />
                   <p>Click the red circle icon in the top right hand corner and go down to Settings. Scroll down to select Networks and from the list select Add Network.</p>
                   <p>Add a new network</p>
-                  <img src='/images/metamaskbsc1-faq.png' />
+                  <img src='/images/metamaskbsc1-faq.png' alt='metamask screenshot' />
 
                   <p>Click save and click the X to head back to main view. You will notice the units are no longer showing in ETH but are now showing BNB. Your wallet is now ready and connected to the Binance Smart Chain main net.</p>
                   <p>Step 2. Send BNB to your Metamask Wallet.</p>
@@ -146,7 +146,7 @@ const faq = () => {
                   <h4 className='py-4 text-xl font-bold'>Personal Wallets</h4>
                   <hr />
                   <p>Personal wallets are used to store PROFIT (outside of exchanges) and to trade at decentralised exchanges.</p>
-                  <p>Such wallets are <Link to="https://metamask.io/">MetaMask</Link>, <Link to="https://trustwallet.com/">Trust Wallet </Link>,<Link to="https://www.tronlink.org/">TronLink</Link>> choose one that suits you.</p>
+                  <p>Such wallets are <Link to="https://metamask.io/">MetaMask</Link>, <Link to="https://trustwallet.com/">Trust Wallet </Link>,<Link to="https://www.tronlink.org/">TronLink</Link> choose one that suits you.</p>
                   <p className='text-bold'>Polygon Network Soon</p>
                   <p className='text-bold'>Solana Network Soon</p>
                 </div>
