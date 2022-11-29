@@ -10,6 +10,7 @@ import Perks from "../components/Sections/Perks"
 import RoadMap from "../components/Sections/RoadMap"
 import Support from "../components/Support"
 import Why from "../components/Why"
+import { SEO } from "../components/Seo"
 
 const IndexPage = () => {
   return (
@@ -29,5 +30,7 @@ const IndexPage = () => {
 }
 
 export default IndexPage
-
-export const Head = () => <title>Zeroloss | Home</title>
+export const Head = () => (
+  <SEO />
+)
+// export const Head = () => <title>Zeroloss | Home</title>

@@ -1,6 +1,7 @@
 import { Link } from 'gatsby'
 import React from 'react'
 import Layout from '../components/Layout'
+import { SEO } from '../components/Seo'
 
 const faq = () => {
   return (
@@ -171,4 +172,6 @@ const faq = () => {
 
 export default faq
 
-export const Head = () => <title>Faq | Zeroloss</title>
+export const Head = () => (
+  <SEO title="Faq | Zeroloss" />
+)

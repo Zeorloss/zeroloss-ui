@@ -4,6 +4,7 @@ import Button from "../components/Buttons/Button";
 import Layout from "../components/Layout";
 import Section from "../components/Section";
 import {Link} from "gatsby"
+import { SEO } from "../components/Seo";
 
 function zerolosspad() {
   return (
@@ -51,4 +52,7 @@ function zerolosspad() {
 
 export default zerolosspad;
 
-export const Head = () => <title>Pad | Zeroloss</title>
+export const Head = () => (
+  <SEO title="Pad | Zeroloss" />
+)
+

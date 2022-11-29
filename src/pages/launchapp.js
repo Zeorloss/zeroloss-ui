@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from '../components/Button'
 import Layout from '../components/Layout'
+import { SEO } from '../components/Seo'
 
 const launchapp = () => {
   return (
@@ -30,5 +31,7 @@ const launchapp = () => {
 
 export default launchapp
 
-export const Head = () => <title>Launchapp | Zeroloss</title>
+export const Head = () => (
+  <SEO title="LaunchApp | Zeroloss" />
+)
 

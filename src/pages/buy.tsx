@@ -32,6 +32,7 @@ import { ethers } from "ethers";
 import { RefreshContext } from "../contexts/RefreshContext";
 import CopyToClipboard from "../components/Tools/copyToClipboard";
 import { PageProps } from "gatsby";
+import { SEO } from "../components/Seo";
 
 const buyZLT = async (amount: string, ref: string, signer: CallSignerType) => {
   const contract = getZltContract(signer);
@@ -230,7 +231,7 @@ const BuyPage = ({ location }: PageProps) => {
           <div className="">
             <CopyToClipboard
               canCopy={active && account != null}
-              content={`${origin}/?ref=${account}`}
+              content={`${origin}/buy?ref=${account}`}
             />
           </div>
         </section>
@@ -364,4 +365,6 @@ const TextInput = ({
 
 export default BuyPage;
 
-export const Head = () => <title>Buy | Zeroloss</title>;
+export const Head = () => (
+  <SEO title="Buy | Zeroloss" />
+)
