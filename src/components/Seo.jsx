@@ -20,6 +20,13 @@ export const SEO = ({ title, description, pathname, children }) => {
       <meta http-equiv="content-language" content="en" />
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      {/* <meta name="image" content={seo.image} /> */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={seo.title} />
+      <meta name="twitter:url" content={seo.url} />
+      <meta name="twitter:description" content={seo.description} />
+      <meta name="twitter:image" content={seo.image} />
+      <meta name="twitter:creator" content={seo.twitterUsername} />
       {children}
     </>
   )

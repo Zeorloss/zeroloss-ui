@@ -92,9 +92,9 @@ class InfoChart extends Component {
         <p>zDAO will be minted as token to secure the ZEROLOSS DAO </p>
         <p>A fixed amount of ZLT will be voted for and burnt to mint zDAO,
              this will ensure the sustainable interoperability of ZEROLOSS 
-             with stable coins and BNB. Read our white paper <Link to="#"><span className="text-blue-900 font-bold">here</span></Link></p>
+             with stable coins and BNB. Read our white paper <a download href='/litepaper.pdf'><span className="text-blue-900 font-bold">here</span></a></p>
         <p>ZEROLOSS is the utility and dApp, ZLT is the currency </p> 
-        <p>For more information about ZEROLOSS send us an email <Link to="#" >here</Link> or chat with our team on discord <Link to="#">here</Link></p>
+        <p>For more information about ZEROLOSS send us an email <Link to='mailto:teammarketing@zeroloss.finance'><span className="text-blue-900 font-bold">here</span></Link> or chat with our team on discord <Link to="https://discord.gg/brUDkCb72M"><span className="text-blue-900 font-bold">here</span></Link></p>
       </div>
       </div>
     );

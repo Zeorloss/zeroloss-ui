@@ -16,7 +16,7 @@ const launchapp = () => {
                 <progress className='w-full my-8 bg-white rounded-md'></progress>
 
                 <div className='flex justify-between items-center bg-white py-1 px-2 rounded-lg'>
-                  <input type="text" name="email" placeholder='Enter your email' />
+                  <input className="text-black w-full outline-0" type="text" name="email" placeholder='Enter your email' />
                   <Button text="Notify Me" styling="p-2 rounded-lg text-black w-32" bg="bg-primary-600" />
                 </div>
             </div>

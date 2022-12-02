@@ -15,7 +15,7 @@ export const perks = [
     sub: "POS utility platform with PMM algorithm and POE as the core interoperability model, SmartTrade, Pools, Stake, Combiner Harvest Mining, NFT with ZLT",
   },
   {
-    icon: "shield-quarter",
+    icon: "package",
     lead: "ZEROLOSSPAD",
     sub: "ZLT token HOLDERS comes first and have access to IZO pools, Lands in ZeroVerse and the opportunity to get into new projects equitably without whales and bots eating up the allocation.",
   },

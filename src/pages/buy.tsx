@@ -168,22 +168,11 @@ const BuyPage = ({ location }: PageProps) => {
           Zeroloss Token Sale.
         </h1>
         <section className="text-center space-y-5 relative">
-          <div className="absolute top-40 left-0 w-56 opacity-40">
-            <img
-              alt="gcoin-logo image"
-              src="../images/bg-gcoin-logo.png"
-              placeholder="blurred"
-            />
-          </div>
           <div className="space-y-5 relative">
             <p className="max-w-lg mx-auto">
               BUY ZLT, refer and earn 10% referral bonus in BUSD.
             </p>
             <div className="bg-[#191039] p-5 max-w-sm space-y-3 mx-auto rounded">
-              {/* <CountDownTimer
-                timestamp={2657753200}
-                handleDisableButton={() => {}}
-              /> */}
 
               {active && isApproved && (
                 <TextInput
