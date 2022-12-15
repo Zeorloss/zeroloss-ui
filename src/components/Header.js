@@ -14,15 +14,12 @@ const Header = () => {
         <Link to='/'>
             <img src='/images/tZeroloss_logo.png' width="80px" alt="zeroloss logo" />
         </Link>
-        <motion.nav
-            animate={{left: navOpen? 0: -1000, opacity: 1}}
-            initial={{left: -1000, opacity: 0}}
-            transition={{ ease: "easeOut", duration: .4 }}
-         className={` sm:block  lg:static sm:ml-auto absolute top-[80px] h-[100vh] sm:h-min w-screen sm:w-auto bg-black z-50`} >
-            <menu className='flex flex-col sm:flex-row basis-fulls '>
+        {/* <nav className={`${navOpen?"absolute top-[80px]  bg-black  w-screen translate-x-0":"md:translate-x-0 translate-x-[-1000px] sm:ml-auto sm:w-auto   sm:h-min"}      `} > */}
+        <nav className={`${navOpen?" translate-x-0 top-[80px] z-50 h-[100vh]  w-screen":"translate-x-[-1000px] md:translate-x-0"} bg-black absolute md:!static md:ml-auto sm:w-auto   sm:h-min` } >
+            <menu className='flex md:!flex-row flex-col  basis-full '>
                 {menuItem.map((item,index)=> <li className='text-center p-5 text-xl' key={index}><a {...(item.download? "download": "")} href={item.url.toLowerCase()}>{item.linkText}</a></li>)}
             </menu>
-        </motion.nav>
+        </nav>
         <div className='ml-auto lg:ml-10 flex gap-2'>
             <Link to='/buy'>
                 <Button text="Buy"/>

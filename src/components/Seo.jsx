@@ -17,8 +17,8 @@ export const SEO = ({ title, description, pathname, children }) => {
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
       <link rel="icon" href="/icon.png" type="image/png" />
-      <meta http-equiv="content-language" content="en" />
-      <meta charset="UTF-8" />
+      <meta httpEquiv="content-language" content="en" />
+      <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       {/* <meta name="image" content={seo.image} /> */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -27,6 +27,9 @@ export const SEO = ({ title, description, pathname, children }) => {
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:image" content={seo.image} />
       <meta name="twitter:creator" content={seo.twitterUsername} />
+      <link href="https://kryptolite.rocks/assets/widget/v1/styles.css" defer rel="stylesheet" />
+    <script src="https://kryptolite.rocks/assets/widget/v1/main.js" async defer></script>
+    <script src="https://kryptolite.rocks/assets/widget/v1/kryptolitewidget.min.js" async defer></script>
       {children}
     </>
   )
