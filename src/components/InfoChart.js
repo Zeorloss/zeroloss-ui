@@ -57,7 +57,7 @@ class InfoChart extends Component {
       <div className="bg-white" >
         <h1
           style={{ textAlign: "center"}}
-        //   className="mb-3 h3-font font-b--700"
+          className="text-3xl md:text-5xl"
         >
           ZEROLOSS TOKENOMICS
         </h1>
