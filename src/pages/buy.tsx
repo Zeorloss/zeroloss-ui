@@ -85,10 +85,8 @@ const BuyPage = ({ location }: PageProps) => {
 
       if (allowance.isLessThan(ethers.constants.MaxUint256)) {
         setIsApproved(false);
-      } else {
-        setIsApproved(true);
-        return true;
-      }
+      } 
+      
     } else {
       setIsApproved(false);
     }
