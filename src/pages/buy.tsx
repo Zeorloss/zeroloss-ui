@@ -33,6 +33,7 @@ import { RefreshContext } from "../contexts/RefreshContext";
 import CopyToClipboard from "../components/Tools/copyToClipboard";
 import { PageProps } from "gatsby";
 import { SEO } from "../components/Seo";
+import erc20Abi from "../config/abi/erc20.json"
 
 const buyZLT = async (amount: string, ref: string, signer: CallSignerType) => {
   const contract = getZltContract(signer);
@@ -83,9 +84,16 @@ const BuyPage = ({ location }: PageProps) => {
         library.getSigner(account)
       );
 
+      console.log(allowance)
+
       if (allowance.isLessThan(ethers.constants.MaxUint256)) {
         setIsApproved(false);
       } 
+
+      // else {
+      //   setIsApproved(true);
+      //   return true;
+      // }
       
     } else {
       setIsApproved(false);
@@ -157,6 +165,26 @@ const BuyPage = ({ location }: PageProps) => {
       },
       [balance]
     );
+    
+      const [contractBal, setContractBal] = useState()
+
+    useEffect(() => {
+      const contract = getContract(erc20Abi, getAddress(addresses.zlt));
+        contract
+          .balanceOf("0x02f49F484da3c594576622a1116c05E295F47D1d")
+          .then((p: ethers.BigNumber) => {
+            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toJSON();
+            const toNum = Number(bal)
+            const percentBal = ((25000000 - toNum)/25000000*100).toFixed(2)
+            setContractBal(percentBal)
+          
+          })
+          .catch((e:any) => {
+            console.error(e, "Error getting balance");
+           
+          });
+    }, [])
+    
 
   return (
     <Layout>
@@ -205,6 +233,16 @@ const BuyPage = ({ location }: PageProps) => {
               )}
             </div>
           </div>
+          {contractBal && (
+                      <>
+                        <p className="font-bold">Token Sale Progress.</p>
+                        <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
+                          <div className={`h-full absolute top-0 px-4 bg-yellow-400`} style={{width: `${contractBal}%`}}>
+                          </div>
+                            <p className="text-black text-center block m-auto font-bold" >{`${contractBal}%`}</p>
+                        </div>
+                      </>
+          )}
         </section>
 
         <section className="text-center py-10">

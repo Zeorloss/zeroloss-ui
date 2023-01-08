@@ -49,7 +49,7 @@ const ConnectModal = ({ login, logout, onDismiss = () => null, displayCount = 3 
 
   return (
     <div
-      className="w-[90%] pb-10 max-h-[453px] py-6 outline-none max-w-xs mx-auto absolute
+      className="w-[90%] bg-[#e0dfdf] pb-10 max-h-[453px] py-6 outline-none max-w-xs mx-auto absolute
       left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-primary rounded-xl font-sans transition
         duration-300"
     >
