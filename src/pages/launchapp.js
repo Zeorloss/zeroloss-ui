@@ -17,7 +17,7 @@ const launchapp = () => {
                 <progress className='w-full my-8 bg-white rounded-md'></progress>
 
                 <div className='flex flex-col md:flex-row md:justify-between  py-1 px-2 rounded-lg'>
-                  <p className=' font-bold text-2xl pb-4 items-center'>Join ZLTchain, get OAT</p>
+                  <p className=' font-bold text-2xl pb-4 items-center'>Joining ZLTchain, get OAT</p>
                   <Link className='w-40' href="https://galxe.com/Zeroloss/campaign/GCcfGUwa6P"><Button text="Mint Now" styling="p-2 rounded-lg text-black w-40" bg="bg-primary-600" /></Link>
                 </div>
             </div>
@@ -27,6 +27,14 @@ const launchapp = () => {
                 <div id='kryptolite-swap-widget'  data-referraladdress="0x88813f879147ed09cc5c1cd61ed8daa349d7d2ab" data-basetoken="0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" data-color='#E7BB0B'></div>
               </div>
             </div>
+        </section>
+        <section className='px-4  text-white mt-32 text-center'>
+          <h2 className='text-3xl text-center lg:text-5xl font-bold mb-4'>Cryptofy Digital</h2>
+          <p>Get Started with Cryptofy Coin (CFC)</p>
+          <p className='my-4'>Cryptofy bridges the virtual and the physial worlds offering and integrating Blockchain value between real world, lives and the virtual world.</p>
+          <Link href="/cfy">
+            <Button text="Buy CFC" styling="p-2 my-4 m-auto rounded-lg text-black w-40" bg="bg-primary-600"></Button>
+          </Link>
         </section>
     </Layout>
   )
