@@ -90,10 +90,10 @@ const BuyPage = ({ location }: PageProps) => {
         setIsApproved(false);
       } 
 
-      // else {
-      //   setIsApproved(true);
-      //   return true;
-      // }
+      else {
+        setIsApproved(true);
+        return true;
+      }
       
     } else {
       setIsApproved(false);
@@ -198,10 +198,10 @@ const BuyPage = ({ location }: PageProps) => {
         <section className="text-center space-y-5 relative text-xl">
           <div className="space-y-5 relative">
             <p className="max-w-lg mx-auto font-bold">BUY CFC.</p>
-            <p>Fiar Launch - Max buy 2 BNB</p>
-            <p><span className="font-bold">Liquity (%):</span> 51%</p>
+            <p>Fair Launch - Max buy 2 BNB</p>
+            <p><span className="font-bold">Liquidity (%):</span> 51%</p>
             <p><span className="font-bold">Lockup Time:</span> 365days</p>
-            <p><span className="font-bold">Sale Start in:</span> 4days</p>
+            <p><span className="font-bold">Sale Starts in:</span> 4days</p>
 
             <div className="bg p-5 max-w-sm space-y-3 mx-auto rounded">
 

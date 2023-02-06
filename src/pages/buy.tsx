@@ -90,10 +90,10 @@ const BuyPage = ({ location }: PageProps) => {
         setIsApproved(false);
       } 
 
-      // else {
-      //   setIsApproved(true);
-      //   return true;
-      // }
+      else {
+        setIsApproved(true);
+        return true;
+      }
       
     } else {
       setIsApproved(false);
