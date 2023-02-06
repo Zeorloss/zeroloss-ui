@@ -83,16 +83,15 @@ const BuyPage = ({ location }: PageProps) => {
         getBusdAddress(),
         library.getSigner(account)
       );
+      console.log("allowance: " + allowance)
 
-      console.log(allowance)
-
-      if (allowance.isLessThan(ethers.constants.MaxUint256)) {
-        setIsApproved(false);
+      if (allowance.isEqualTo(ethers.constants.MaxUint256)) {
+        setIsApproved(true);
       } 
 
       else {
-        setIsApproved(true);
-        return true;
+        setIsApproved(false);
+        return false;
       }
       
     } else {
