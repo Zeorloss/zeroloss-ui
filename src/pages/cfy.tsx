@@ -397,5 +397,5 @@ const TextInput = ({
 export default BuyPage;
 
 export const Head = () => (
-  <SEO title="Buy | Zeroloss" />
+  <SEO title="Buy CFY | Cryptofy" />
 )
