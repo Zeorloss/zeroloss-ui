@@ -87,6 +87,7 @@ const BuyPage = ({ location }: PageProps) => {
 
       if (allowance.isEqualTo(ethers.constants.MaxUint256)) {
         setIsApproved(true);
+        return true
       } 
 
       else {
@@ -96,8 +97,8 @@ const BuyPage = ({ location }: PageProps) => {
       
     } else {
       setIsApproved(false);
+      return false;
     }
-    return false;
   }, [account, active, library]);
 
   useEffect(() => {
