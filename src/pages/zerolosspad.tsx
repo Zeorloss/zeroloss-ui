@@ -5,7 +5,8 @@ import Layout from "../components/Layout";
 import Section from "../components/Section";
 import {Link} from "gatsby"
 import { SEO } from "../components/Seo";
-import {Button as Buttons }from '../components/Button'
+// import Button from '../components/Button'
+// import {Button as tn} from "../components/Button";
 
 
 function zerolosspad() {
@@ -40,7 +41,7 @@ function zerolosspad() {
           <p>Get Started with Cryptofy Coin (CFC)</p>
           <p className='my-4'>Cryptofy bridges the virtual and the physial worlds offering and integrating Blockchain value between real world, lives and the virtual world.</p>
           <Link to="/cfy">
-            <Buttons text="Buy CFC" styling="p-2 my-4 m-auto rounded-lg text-black w-40" bg="bg-primary-600"></Buttons>
+            <Button className="p-2 my-4 m-auto rounded-lg text-black w-40 bg-primary-600">BUY CFC</Button>
           </Link>
         </section>
       <Section containerClass="bg-white text-black text-center pt-32 pb-40" >
