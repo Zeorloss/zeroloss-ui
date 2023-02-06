@@ -87,17 +87,17 @@ const BuyPage = ({ location }: PageProps) => {
 
       if (allowance.isEqualTo(ethers.constants.MaxUint256)) {
         setIsApproved(true);
-        return true
+        // return true
       } 
 
       else {
         setIsApproved(false);
-        return false;
+        // return false;
       }
       
     } else {
       setIsApproved(false);
-      return false;
+      // return false;
     }
   }, [account, active, library]);
 
