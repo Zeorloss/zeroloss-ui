@@ -16,9 +16,9 @@ const useApproveToken = (spenderContract: Contract, tokenAddress: string) => {
       spenderContract,
       "approve",
       [tokenAddress, ethers.constants.MaxUint256],
-      // {
-        // gasLimit: calculateGasMargin(estimatedGas),
-      // }
+      {
+        gasLimit: calculateGasMargin(estimatedGas),
+      }
     );
     const receipt = await tx.wait();
     return receipt.status;

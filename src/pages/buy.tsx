@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { MaxUint256 } from "@ethersproject/constants";
 import Layout from "../components/Layout";
 import ConnectWalletButton from "../components/Buttons/ConnectWalletButton";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
@@ -14,6 +15,7 @@ import useToast from "../hooks/useToast";
 import BigNumber from "bignumber.js";
 import classNames from "classnames";
 import {
+  getBep20Contract,
   getBusdContract,
   getContract,
   getZltContract,
@@ -75,52 +77,63 @@ const BuyPage = ({ location }: PageProps) => {
 
   const { origin } = location;
 
-  const checkZltAllowance = useCallback(async () => {
-    if (account && active && library) {
-      const allowance = await checkTokenAllowance(
-        account,
-        getZltSaleAddress(),
-        getBusdAddress(),
-        library.getSigner(account)
-      );
-      console.log("allowance: " + allowance)
-
-      if (allowance.isEqualTo(ethers.constants.MaxUint256)) {
-        setIsApproved(true);
-        // return true
-      } 
-
-      else {
+  useEffect(() => {
+    (async () => {
+      // setRequesting(true);
+      if (account && library) {
+        const contract = getBep20Contract(
+          getBusdAddress(),
+          library.getSigner(account)
+        );
+        contract
+          .allowance(account, getZltSaleAddress())
+          .then(({ _hex }: any) => {
+            if (MaxUint256.eq(_hex)) {
+              setIsApproved(true);
+            } else {
+              setIsApproved(false);
+            }
+            return MaxUint256.eq(_hex); // return promise for finally to run
+          })
+          .finally(() => {
+            // setRequesting(false);
+          });
+      } else {
         setIsApproved(false);
-        // return false;
+        // setIsRequesting(false);
       }
-      
-    } else {
-      setIsApproved(false);
-      // return false;
-    }
-  }, [account, active, library]);
+    })();
+  }, [account, library, isApproved]);
 
   useEffect(() => {
-    checkZltAllowance();
+    (async () => {
+      if (account != null && active && library != null) {
+        const allowance = await checkTokenAllowance(
+          account,
+          getZltSaleAddress(),
+          getBusdAddress(),
+          library.getSigner(),
+        );
+        if (allowance.isLessThan(ethers.constants.MaxUint256)) {
+          setIsApproved(false);
+        } else {
+          setIsApproved(true);
+        }
+      } else {
+        setIsApproved(false);
+      }
+    })();
   }, [account, active, library]);
 
   const handleApprove = useCallback(async () => {
     if (account && library) {
       setFetching(true);
       try {
-        checkZltAllowance().then(async (res) => {
-          if (!res) {
-            await onApprove();
-            setIsApproved(true);
-          }
-        });
+        await onApprove();
+        setIsApproved(true);
       } catch (e) {
-        console.error(e, "Failed");
-        toastError(
-          "Error",
-          "Please try again. Confirm the transaction and make sure you are paying enough gas!"
-        );
+        console.error(e);
+        toastError("Error", "Please try again. Confirm the transaction and make sure you are paying enough gas!");
         setIsApproved(false);
       } finally {
         setFetching(false);

@@ -5,6 +5,8 @@ import { simpleRpcProvider } from "./providers";
 import BusdAbi from "../config/abi/busd.json"
 import ZltSaleAbi from "../config/abi/zltSale.json"
 import { getBusdAddress, getZltSaleAddress } from "./addressHelpers";
+import bep20Abi from "../config/abi/erc20.json";
+
 
 export const getContract = (abi: any, address: string, signer?: Signer | Provider) => {
   const signerOrProvider = signer ?? simpleRpcProvider;
@@ -25,4 +27,11 @@ export const getBusdContract = (signer?: Signer | Provider) => {
 
 export const getZltContract = (signer?: Signer | Provider) => {
   return getContract(ZltSaleAbi, getZltSaleAddress(), signer);
+};
+
+export const getBep20Contract = (
+  address: string,
+  signer?: Signer | Provider
+) => {
+  return getContract(bep20Abi, address, signer);
 };
