@@ -4,7 +4,8 @@ import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { simpleRpcProvider } from "./providers";
 import BusdAbi from "../config/abi/busd.json"
 import ZltSaleAbi from "../config/abi/zltSale.json"
-import { getBusdAddress, getZltSaleAddress } from "./addressHelpers";
+import cfycSaleAbi from "../config/abi/cfySale.json"
+import { getBusdAddress, getCfycSaleAddress, getZltSaleAddress } from "./addressHelpers";
 import bep20Abi from "../config/abi/erc20.json";
 
 
@@ -27,6 +28,9 @@ export const getBusdContract = (signer?: Signer | Provider) => {
 
 export const getZltContract = (signer?: Signer | Provider) => {
   return getContract(ZltSaleAbi, getZltSaleAddress(), signer);
+};
+export const getCfycSaleContract = (signer?: Signer | Provider) => {
+  return getContract(cfycSaleAbi, getCfycSaleAddress(), signer);
 };
 
 export const getBep20Contract = (

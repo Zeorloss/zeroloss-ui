@@ -38,10 +38,10 @@ function zerolosspad() {
       </Section>
       <section className='px-4  text-white mt-32 text-center'>
           <h2 className='text-3xl text-center lg:text-5xl font-bold mb-4'>Cryptofy Digital</h2>
-          <p>Get Started with Cryptofy Coin (CFC)</p>
+          <p>Get Started with Cryptofy Coin (CFYC)</p>
           <p className='my-4'>Cryptofy bridges the virtual and the physial worlds offering and integrating Blockchain value between real world, lives and the virtual world.</p>
           <Link to="/cfy">
-            <Button className="p-2 my-4 m-auto rounded-lg text-black w-40 bg-primary-600">BUY CFC</Button>
+            <Button className="p-2 my-4 m-auto rounded-lg text-black w-40 bg-primary-600">BUY CFYC</Button>
           </Link>
         </section>
       <Section containerClass="bg-white text-black text-center pt-32 pb-40" >

@@ -35,7 +35,7 @@ import { RefreshContext } from "../contexts/RefreshContext";
 import CopyToClipboard from "../components/Tools/copyToClipboard";
 import { PageProps } from "gatsby";
 import { SEO } from "../components/Seo";
-import erc20Abi from "../config/abi/erc20.json"
+import erc20Abi from "../config/abi/erc20.json";
 
 const buyZLT = async (amount: string, ref: string, signer: CallSignerType) => {
   const contract = getZltContract(signer);
@@ -112,7 +112,7 @@ const BuyPage = ({ location }: PageProps) => {
           account,
           getZltSaleAddress(),
           getBusdAddress(),
-          library.getSigner(),
+          library.getSigner()
         );
         if (allowance.isLessThan(ethers.constants.MaxUint256)) {
           setIsApproved(false);
@@ -133,7 +133,10 @@ const BuyPage = ({ location }: PageProps) => {
         setIsApproved(true);
       } catch (e) {
         console.error(e);
-        toastError("Error", "Please try again. Confirm the transaction and make sure you are paying enough gas!");
+        toastError(
+          "Error",
+          "Please try again. Confirm the transaction and make sure you are paying enough gas!"
+        );
         setIsApproved(false);
       } finally {
         setFetching(false);
@@ -178,31 +181,27 @@ const BuyPage = ({ location }: PageProps) => {
       },
       [balance]
     );
-    
-      const [contractBal, setContractBal] = useState()
 
-    useEffect(() => {
-      const contract = getContract(erc20Abi, getAddress(addresses.zlt));
-        contract
-          .balanceOf("0x02f49F484da3c594576622a1116c05E295F47D1d")
-          .then((p: ethers.BigNumber) => {
-            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toJSON();
-            const toNum = Number(bal)
-            const percentBal = ((25000000 - toNum)/25000000*100).toFixed(2)
-            setContractBal(percentBal)
-          
-          })
-          .catch((e:any) => {
-            console.error(e, "Error getting balance");
-           
-          });
-    }, [])
-    
+  const [/* contractBal, */ setContractBal] = useState();
+
+  useEffect(() => {
+    const contract = getContract(erc20Abi, getAddress(addresses.zlt));
+    contract
+      .balanceOf("0x02f49F484da3c594576622a1116c05E295F47D1d")
+      .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toJSON();
+        const toNum = Number(bal);
+        const percentBal = (((25000000 - toNum) / 25000000) * 100).toFixed(2);
+        setContractBal(percentBal);
+      })
+      .catch((e: any) => {
+        console.error(e, "Error getting balance");
+      });
+  }, []);
 
   return (
     <Layout>
       <section className="text-white px-8 md:max-w-[80%] m-auto">
-
         <h1 className="text-5xl text-center font-bold text-yellow-400 my-10 leading-slug">
           Zeroloss Token Sale.
         </h1>
@@ -212,7 +211,6 @@ const BuyPage = ({ location }: PageProps) => {
               BUY ZLT, refer and earn 10% referral bonus in BUSD.
             </p>
             <div className="bg-[#191039] p-5 max-w-sm space-y-3 mx-auto rounded">
-
               {active && isApproved && (
                 <TextInput
                   errorMsg={errorMsg}
@@ -246,16 +244,18 @@ const BuyPage = ({ location }: PageProps) => {
               )}
             </div>
           </div>
-          {contractBal && (
-                      <>
-                        <p className="font-bold">Token Sale Progress.</p>
-                        <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
-                          <div className={`h-full absolute top-0 px-4 bg-yellow-400`} style={{width: `${contractBal}%`}}>
-                          </div>
-                            <p className="text-black text-center block m-auto font-bold" >{`${contractBal}%`}</p>
-                        </div>
-                      </>
-          )}
+          {/* {contractBal && (
+            <>
+              <p className="font-bold">Token Sale Progress.</p>
+              <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
+                <div
+                  className={`h-full absolute top-0 px-4 bg-yellow-400`}
+                  style={{ width: `${contractBal}%` }}
+                ></div>
+                <p className="text-black text-center block m-auto font-bold">{`${contractBal}%`}</p>
+              </div>
+            </>
+          )} */}
         </section>
 
         <section className="text-center py-10">
@@ -403,6 +403,4 @@ const TextInput = ({
 
 export default BuyPage;
 
-export const Head = () => (
-  <SEO title="Buy | Zeroloss" />
-)
+export const Head = () => <SEO title="Buy | Zeroloss" />;

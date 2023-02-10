@@ -28,14 +28,14 @@ const launchapp = () => {
               </div>
             </div>
         </section>
-        <section className='px-4  text-white mt-32 text-center'>
+        {/* <section className='px-4  text-white mt-32 text-center'>
           <h2 className='text-3xl text-center lg:text-5xl font-bold mb-4'>Cryptofy Digital</h2>
-          <p>Get Started with Cryptofy Coin (CFC)</p>
+          <p>Get Started with Cryptofy Coin (CFYC)</p>
           <p className='my-4'>Cryptofy bridges the virtual and the physial worlds offering and integrating Blockchain value between real world, lives and the virtual world.</p>
           <Link href="/cfy">
-            <Button text="Buy CFC" styling="p-2 my-4 m-auto rounded-lg text-black w-40" bg="bg-primary-600"></Button>
+            <Button text="Buy CFYC" styling="p-2 my-4 m-auto rounded-lg text-black w-40" bg="bg-primary-600"></Button>
           </Link>
-        </section>
+        </section> */}
     </Layout>
   )
 }
