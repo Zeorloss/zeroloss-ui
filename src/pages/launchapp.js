@@ -32,7 +32,7 @@ const launchapp = () => {
           <h2 className='text-3xl text-center lg:text-5xl font-bold mb-4'>Cryptofy Digital</h2>
           <p>Get Started with Cryptofy Coin (CFYC)</p>
           <p className='my-4'>Cryptofy bridges the virtual and the physial worlds offering and integrating Blockchain value between real world, lives and the virtual world.</p>
-          <Link href="/cfy">
+          <Link href="/cfyc">
             <Button text="Buy CFYC" styling="p-2 my-4 m-auto rounded-lg text-black w-40" bg="bg-primary-600"></Button>
           </Link>
         </section> */}
