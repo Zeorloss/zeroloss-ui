@@ -25,7 +25,7 @@ export const addresses = {
     97: ""
   },
   cfycSale: {
-    56: "0x11FF8ced8eA9B4CA643d19638176C0D4471faB13",
+    56: "0xa600214DeD3243C810e15Bbc484C98D02A7b66ea",
     97: ""
   },
   cfyc: {

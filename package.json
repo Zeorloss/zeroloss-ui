@@ -35,6 +35,7 @@
     "gatsby-plugin-sitemap": "^5.20.0",
     "gatsby-source-filesystem": "^4.20.0",
     "gatsby-transformer-sharp": "^4.20.0",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-countdown-circle-timer": "^3.0.9",
     "react-dom": "^18.2.0",

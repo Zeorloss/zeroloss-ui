@@ -34,6 +34,87 @@ import { RefreshContext } from "../contexts/RefreshContext";
 import { SEO } from "../components/Seo";
 import erc20Abi from "../config/abi/erc20.json";
 import { Link } from "gatsby";
+import Layout from "../components/Layout";
+import queryString from "query-string";
+
+interface SwapLogs {
+  status: string;
+  message: string;
+  result: {
+    address: string;
+    topics: string[];
+    data: string;
+    blockNumber: string;
+    blockHash: string;
+    timeStamp: string;
+    gasPrice: string;
+    gasUsed: string;
+    logIndex: string;
+    transactionHash: string;
+    transactionIndex: string;
+  }[];
+}
+
+type Event = {
+  data: ethers.utils.LogDescription;
+};
+
+const abi = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "inAmount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "outAmount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "id1",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "id2",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "id3",
+        type: "uint256",
+      },
+    ],
+    name: "Swap",
+    type: "event",
+  },
+];
+const iface = new ethers.utils.Interface(abi);
+
+export function arrayUnique(array: any[]) {
+  var a = array.concat();
+  for (var i = 0; i < a.length; ++i) {
+    for (var j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+  return a;
+}
 
 const buyCfyc = async (amount: string, signer: CallSignerType) => {
   const contract = getCfycSaleContract(signer);
@@ -42,18 +123,6 @@ const buyCfyc = async (amount: string, signer: CallSignerType) => {
   const receipt = await tx.wait();
   return receipt.status;
 };
-
-// check if a user has allowed spending a token in a specified smart contract
-/* const checkTokenAllowance = async (
-  account: string,
-  contractAddress: string,
-  tokenAddress: string,
-  signer: CallSignerType
-) => {
-  const contract = getContract(erc20, tokenAddress, signer);
-  const { _hex } = await contract.allowance(account, contractAddress);
-  return new BigNumber(_hex);
-}; */
 
 const BuyPage = () => {
   const [fetching, setFetching] = useState(false);
@@ -69,6 +138,7 @@ const BuyPage = () => {
   const [contractBal, setContractBal] = useState("0");
   const [zltThreshold, setZltThreshold] = useState(10000);
   const [zltBal, setZltBal] = useState(0);
+  const [records, setRecords] = useState<number[]>([]);
 
   const { onApprove } = useApproveToken(
     getBusdContract(library?.getSigner()),
@@ -104,26 +174,6 @@ const BuyPage = () => {
       }
     })();
   }, [account, library, isApproved]);
-
-  /* useEffect(() => {
-    (async () => {
-      if (account != null && active && library != null) {
-        const allowance = await checkTokenAllowance(
-          account,
-          getCfycSaleAddress(),
-          getBusdAddress(),
-          library.getSigner()
-        );
-        if (allowance.isLessThan(ethers.constants.MaxUint256)) {
-          setIsApproved(false);
-        } else {
-          setIsApproved(true);
-        }
-      } else {
-        setIsApproved(false);
-      }
-    })();
-  }, [account, active, library]); */
 
   // ZLT Balance
   useEffect(() => {
@@ -236,99 +286,164 @@ const BuyPage = () => {
         console.error(e, "Error getting balance");
       });
   }, []);
-  return (
-    <section className="bg-[#d3d4d5] h-screen">
-      <section className="text-[#1E50BC] px-8 md:max-w-[80%] m-auto py-10">
-        <h1 className="text-5xl text-center font-bold mb-10 leading-slug">
-          Croptofy Token Sale.
-        </h1>
-        <section className="text-center space-y-5 relative text-xl">
-          <div className="space-y-5 relative">
-            <p className="max-w-lg mx-auto font-bold">BUY CFYC.</p>
-            <p>
-              <span className="font-bold">Max Buy</span> 5000 BUSD
-            </p>
-            <p>
-              <span className="font-bold">Min Buy</span> 500 BUSD
-            </p>
-            <p className="text-sm">Hold 10000 ZLT to get whitelisted for IZO</p>
-            {zltBal < zltThreshold && (
-              <Link
-                to="/buy"
-                className="text-base underline hover:no-underline transition-all duration-300"
-              >
-                Buy ZLT
-              </Link>
-            )}
-            {/*  <p>
-              <span className="font-bold">Sale Starts in:</span> 4 days
-            </p>*/}
-            <div className="bg p-5 max-w-sm space-y-3 mx-auto rounded">
-              {active && isApproved && (
-                <TextInput
-                  errorMsg={errorMsg}
-                  onChangeHandler={handleInputChange}
-                  value={amountToPay}
-                  onSubmit={handleBuyCfyc}
-                  trx={fetching}
-                  isDisabled={
-                    fetching ||
-                    errorMsg.length > 0 ||
-                    Number.isNaN(Number.parseFloat(amountToPay)) ||
-                    Number.parseFloat(amountToPay) === 0
-                  }
-                />
-              )}
-              {active && !isApproved && (
-                <CustomButton
-                  onClick={handleApprove}
-                  className="!block mx-auto uppercase text-base hover:bg-white bg-[#1E50BC]"
-                  disabled={fetching}
-                  loading={fetching}
-                >
-                  Approve BUSD
-                </CustomButton>
-              )}
-              {!active && (
-                <Fragment>
-                  <ConnectWalletButton className="hover:bg-white bg-[#1E50BC]" />
-                  <p className="text-sm">Connect your wallet.</p>
-                </Fragment>
-              )}
-            </div>
-          </div>
-          {contractBal && (
-            <>
-              <p className="font-bold">Token Sale Progress.</p>
-              <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
-                <div
-                  className={`h-full absolute top-0 px-4 bg-[#1E50BC]`}
-                  style={{ width: `${contractBal}%` }}
-                ></div>
-                <p className="text-black text-center block m-auto font-bold">{`${contractBal}%`}</p>
-              </div>
-            </>
-          )}
-        </section>
 
-        {/* <section className="text-center py-10">
-          <h2 className="text-3xl font-medium text-yellow-400 my-2">
-            The Referral Programe
-          </h2>
-          <p className="">
-            Share your referral link and get 10% BUSD commission for referred
-            token purchases instantly to your wallet.
-          </p>
-          <div className="">
-            <CopyToClipboard
-              canCopy={active && account != null}
-              content={`${origin}/buy?ref=${account}`}
-            />
-          </div>
-        </section> */}
-      </section>
-    </section>
-    // </Layout>
+  // Swap events
+  useEffect(() => {
+    const getSwapLogs = async function () {
+      if (library && account) {
+        const contractBsc = getCfycSaleContract(library.getSigner(account));
+        const eventFilter = contractBsc.filters.Swap(account);
+
+        const currentBlock = await library.getBlockNumber();
+
+        const { address, topics } = eventFilter;
+        if (address && topics) {
+          const requestParams = {
+            module: "logs",
+            action: "getLogs",
+            fromBlock: 25549795,
+            toBlock: currentBlock,
+            address: address,
+            topic0: topics[0],
+            topic1: topics[1],
+            apikey: "",
+          };
+          const stringified = queryString.stringifyUrl({
+            url: "https://api.bscscan.com/api",
+            query: requestParams,
+          });
+          fetch(stringified)
+            .then(async (res) => {
+              const logs = (await res.json()) as SwapLogs;
+              // console.log(logs)
+
+              if (Array.isArray(logs.result)) {
+                const events: Event[] = logs.result.map((log) => {
+                  return {
+                    data: iface.parseLog(log),
+                  };
+                });
+
+                const eventLogs = events.map(({ data }) => {
+                  const { id1, id2, id3 } = data.args;
+                  return [
+                    new BigNumber(id1._hex).toNumber(),
+                    new BigNumber(id2._hex).toNumber(),
+                    new BigNumber(id3._hex).toNumber(),
+                  ];
+                });
+                // setRecord(eventLogs);
+                setRecords((p) => arrayUnique(p.concat(...eventLogs)));
+              }
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        }
+      }
+    };
+
+    getSwapLogs();
+  }, [library, account]);
+
+  return (
+    <Layout>
+      <div className="flex justify-center items-center mt-10">
+        <section className="bg-white p-5 md:p-10 w-full max-w-screen-md">
+          <section className="text-[#1E50BC] px-8 md:max-w-[80%] m-auto py-10">
+            <h1 className="text-5xl text-center font-bold mb-10 leading-slug">
+              Cryptofy Private Sale.
+            </h1>
+            <section className="text-center space-y-5 relative text-xl">
+              <div className="space-y-5 relative">
+                <p className="max-w-lg mx-auto font-bold">BUY $CFYC</p>
+                <p>
+                  <span className="font-bold">Max Buy</span> 5000 BUSD
+                </p>
+                <p>
+                  <span className="font-bold">Min Buy</span> 500 BUSD
+                </p>
+                <p className="text-sm">
+                  Hold 10000 ZLT to get whitelisted for Cryptofy private sale.
+                </p>
+                {zltBal < zltThreshold && (
+                  <Link
+                    to="/buy"
+                    className="text-base underline hover:no-underline transition-all duration-300"
+                  >
+                    Insufficient ZLT, get some!
+                  </Link>
+                )}
+                <div className="bg p-5 max-w-sm space-y-3 mx-auto rounded">
+                  {active && isApproved && (
+                    <TextInput
+                      errorMsg={errorMsg}
+                      onChangeHandler={handleInputChange}
+                      value={amountToPay}
+                      onSubmit={handleBuyCfyc}
+                      trx={fetching}
+                      isDisabled={
+                        fetching ||
+                        errorMsg.length > 0 ||
+                        Number.isNaN(Number.parseFloat(amountToPay)) ||
+                        Number.parseFloat(amountToPay) === 0
+                      }
+                    />
+                  )}
+                  {active && !isApproved && (
+                    <CustomButton
+                      onClick={handleApprove}
+                      className="!block mx-auto uppercase text-base hover:bg-white bg-[#1E50BC]"
+                      disabled={fetching}
+                      loading={fetching}
+                    >
+                      Approve BUSD
+                    </CustomButton>
+                  )}
+                  {!active && (
+                    <Fragment>
+                      <ConnectWalletButton className="hover:bg-white bg-[#1E50BC]" />
+                      <p className="text-sm">Connect your wallet.</p>
+                    </Fragment>
+                  )}
+                </div>
+              </div>
+              {contractBal && (
+                <>
+                  <p className="font-bold">Token Sale Progress.</p>
+                  <div className="relative h-7 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
+                    <div
+                      className={`h-full absolute top-0 px-4 bg-[#1E50BC]`}
+                      style={{ width: `${contractBal}%` }}
+                    ></div>
+                    <p className="text-black text-center block m-auto font-bold">{`${contractBal}%`}</p>
+                  </div>
+                </>
+              )}
+              {records.length > 0 && (
+                <div className="mt-10 pt-10">
+                  <h2 className="font-bold my-5">Token Vesting Schedule</h2>
+                  <div className="flex justify-center gap-4 flex-wrap max-w-screen-md">
+                    {records.map((id, index) => (
+                      <p key={id} className="p-1 text-sm">
+                        Vesting {index + 1}:{" "}
+                        <a
+                          href={`https://safe.kimberlite.rocks/56/${id}`}
+                          className="underline text-base font-bold transition-all hover:no-underline hover:scale-110"
+                          target="_blank"
+                        >
+                          View
+                        </a>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          </section>
+        </section>
+      </div>
+    </Layout>
   );
 };
 
