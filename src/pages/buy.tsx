@@ -199,6 +199,26 @@ const BuyPage = ({ location }: PageProps) => {
       });
   }, []);
 
+  const addTokenToMetaMask = async() =>{
+    try {
+    const { ethereum } = window
+    await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: "0x05D8762946fA7620b263E1e77003927addf5f7E6",  
+          symbol: `ZLT`,
+          decimals: 18,
+          image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+        },
+      },
+    })
+  } catch (ex) {
+    console.error(ex)
+  }
+  }
+
   return (
     <Layout>
       <section className="text-white px-8 md:max-w-[80%] m-auto">
@@ -206,6 +226,7 @@ const BuyPage = ({ location }: PageProps) => {
           Zeroloss Token Sale.
         </h1>
         <section className="text-center space-y-5 relative">
+        <button className="w-30 m-auto p-3 rounded-full font-extrabold bg-yellow-500" onClick={()=> addTokenToMetaMask()}>Add ZLT Token</button>
           <div className="space-y-5 relative">
             <p className="max-w-lg mx-auto">
               BUY ZLT, refer and earn 10% referral bonus in BUSD.
@@ -397,6 +418,9 @@ const TextInput = ({
       >
         Buy ZLT
       </CustomButton>
+      {/* <button>Add Token</button> */}
+        <p className="text-sm">{`90% (${new BigNumber(value * .9 || 0).times(1065).toJSON()}) of ${new BigNumber(value || 0).times(1065).toJSON()} will be vested`}</p>
+        {/* <button onClick={()=> addTokenToMetaMask()}>Add ZLT Token</button> */}
     </div>
   );
 };
