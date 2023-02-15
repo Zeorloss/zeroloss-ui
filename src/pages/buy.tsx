@@ -419,7 +419,7 @@ const TextInput = ({
         Buy ZLT
       </CustomButton>
       {/* <button>Add Token</button> */}
-        <p className="text-sm">{`90% (${new BigNumber(value * .9 || 0).times(1065).toJSON()}) of ${new BigNumber(value || 0).times(1065).toJSON()} will be vested`}</p>
+        <p className="text-sm">{`90% (${new BigNumber(value * .9 || 0).times(1065).toJSON()} ZLT)  of ${new BigNumber(value || 0).times(1065).toJSON()} ZLT will be vested`}</p>
         {/* <button onClick={()=> addTokenToMetaMask()}>Add ZLT Token</button> */}
     </div>
   );
