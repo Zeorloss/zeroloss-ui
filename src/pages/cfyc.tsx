@@ -346,6 +346,26 @@ const BuyPage = () => {
     getSwapLogs();
   }, [library, account]);
 
+  const addTokenToMetaMask = async() =>{
+    try {
+    const { ethereum } = window
+    await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: "0x03B6119662292b6BBecFc432B799a82Ae9157f12",  
+          symbol: `CFYC`,
+          decimals: 18,
+          // image: "https://zeroloss.finance/images/tZeroloss_logo.png"
+        },
+      },
+    })
+  } catch (ex) {
+    console.error(ex)
+  }
+  }
+
   return (
     <Layout>
       <div className="flex justify-center items-center mt-10">
@@ -357,6 +377,8 @@ const BuyPage = () => {
             <section className="text-center space-y-5 relative text-xl">
               <div className="space-y-5 relative">
                 <p className="max-w-lg mx-auto font-bold">BUY $CFYC</p>
+                <button className="w-30 m-auto p-3 rounded-full text-base hover:bg-white bg-[#1E50BC] text-white hover:text-black" onClick={()=> addTokenToMetaMask()}>Add CFYC Token</button>
+
                 <p>
                   <span className="font-bold">Max Buy</span> 5000 BUSD
                 </p>
@@ -567,6 +589,8 @@ const TextInput = ({
       >
         Buy CFYC
       </CustomButton>
+      <p className="text-sm">{`90% (${new BigNumber(value * .9 || 0).times(1065).toJSON()} CFYC)  of ${new BigNumber(value || 0).times(1065).toJSON()} CFYC will be vested`}</p>
+
     </div>
   );
 };
