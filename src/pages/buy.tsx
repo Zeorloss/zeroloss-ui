@@ -210,7 +210,7 @@ const BuyPage = ({ location }: PageProps) => {
           address: "0x05D8762946fA7620b263E1e77003927addf5f7E6",  
           symbol: `ZLT`,
           decimals: 18,
-          image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+          image: 'https://bscscan.com/token/images/Zerolossv2_32.png',
         },
       },
     })
