@@ -357,7 +357,7 @@ const BuyPage = () => {
           address: "0x03B6119662292b6BBecFc432B799a82Ae9157f12",  
           symbol: `CFYC`,
           decimals: 18,
-          // image: "https://zeroloss.finance/images/tZeroloss_logo.png"
+          imgage: "https://zeroloss.finance/cdn/Logo%20CRYPTOFY.png"
         },
       },
     })

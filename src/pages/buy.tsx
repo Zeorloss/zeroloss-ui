@@ -210,7 +210,7 @@ const BuyPage = ({ location }: PageProps) => {
           address: "0x05D8762946fA7620b263E1e77003927addf5f7E6",  
           symbol: `ZLT`,
           decimals: 18,
-          image: 'https://zeroloss.finance/images/tZeroloss_logo.png',
+          image: 'https://zeroloss.finance/cdn/Zeroloss%20logo.png',
         },
       },
     })
