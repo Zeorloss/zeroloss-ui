@@ -23,6 +23,14 @@ export const addresses = {
   zlt: {
     56: "0x05D8762946fA7620b263E1e77003927addf5f7E6",
     97: ""
+  },
+  cfycSale: {
+    56: "0xa600214DeD3243C810e15Bbc484C98D02A7b66ea",
+    97: ""
+  },
+  cfyc: {
+    56: "0x03B6119662292b6BBecFc432B799a82Ae9157f12",
+    97: ''
   }
 };
 

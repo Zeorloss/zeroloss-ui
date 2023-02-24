@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { MaxUint256 } from "@ethersproject/constants";
 import Layout from "../components/Layout";
 import ConnectWalletButton from "../components/Buttons/ConnectWalletButton";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
@@ -14,6 +15,7 @@ import useToast from "../hooks/useToast";
 import BigNumber from "bignumber.js";
 import classNames from "classnames";
 import {
+  getBep20Contract,
   getBusdContract,
   getContract,
   getZltContract,
@@ -33,7 +35,7 @@ import { RefreshContext } from "../contexts/RefreshContext";
 import CopyToClipboard from "../components/Tools/copyToClipboard";
 import { PageProps } from "gatsby";
 import { SEO } from "../components/Seo";
-import erc20Abi from "../config/abi/erc20.json"
+import erc20Abi from "../config/abi/erc20.json";
 
 const buyZLT = async (amount: string, ref: string, signer: CallSignerType) => {
   const contract = getZltContract(signer);
@@ -75,48 +77,62 @@ const BuyPage = ({ location }: PageProps) => {
 
   const { origin } = location;
 
-  const checkZltAllowance = useCallback(async () => {
-    if (account && active && library) {
-      const allowance = await checkTokenAllowance(
-        account,
-        getZltSaleAddress(),
-        getBusdAddress(),
-        library.getSigner(account)
-      );
-
-      console.log(allowance)
-
-      if (allowance.isLessThan(ethers.constants.MaxUint256)) {
+  useEffect(() => {
+    (async () => {
+      // setRequesting(true);
+      if (account && library) {
+        const contract = getBep20Contract(
+          getBusdAddress(),
+          library.getSigner(account)
+        );
+        contract
+          .allowance(account, getZltSaleAddress())
+          .then(({ _hex }: any) => {
+            if (MaxUint256.eq(_hex)) {
+              setIsApproved(true);
+            } else {
+              setIsApproved(false);
+            }
+            return MaxUint256.eq(_hex); // return promise for finally to run
+          })
+          .finally(() => {
+            // setRequesting(false);
+          });
+      } else {
         setIsApproved(false);
-      } 
-
-      // else {
-      //   setIsApproved(true);
-      //   return true;
-      // }
-      
-    } else {
-      setIsApproved(false);
-    }
-    return false;
-  }, [account, active, library]);
+        // setIsRequesting(false);
+      }
+    })();
+  }, [account, library, isApproved]);
 
   useEffect(() => {
-    checkZltAllowance();
+    (async () => {
+      if (account != null && active && library != null) {
+        const allowance = await checkTokenAllowance(
+          account,
+          getZltSaleAddress(),
+          getBusdAddress(),
+          library.getSigner()
+        );
+        if (allowance.isLessThan(ethers.constants.MaxUint256)) {
+          setIsApproved(false);
+        } else {
+          setIsApproved(true);
+        }
+      } else {
+        setIsApproved(false);
+      }
+    })();
   }, [account, active, library]);
 
   const handleApprove = useCallback(async () => {
     if (account && library) {
       setFetching(true);
       try {
-        checkZltAllowance().then(async (res) => {
-          if (!res) {
-            await onApprove();
-            setIsApproved(true);
-          }
-        });
+        await onApprove();
+        setIsApproved(true);
       } catch (e) {
-        console.error(e, "Failed");
+        console.error(e);
         toastError(
           "Error",
           "Please try again. Confirm the transaction and make sure you are paying enough gas!"
@@ -165,41 +181,57 @@ const BuyPage = ({ location }: PageProps) => {
       },
       [balance]
     );
-    
-      const [contractBal, setContractBal] = useState()
 
-    useEffect(() => {
-      const contract = getContract(erc20Abi, getAddress(addresses.zlt));
-        contract
-          .balanceOf("0x02f49F484da3c594576622a1116c05E295F47D1d")
-          .then((p: ethers.BigNumber) => {
-            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toJSON();
-            const toNum = Number(bal)
-            const percentBal = ((25000000 - toNum)/25000000*100).toFixed(2)
-            setContractBal(percentBal)
-          
-          })
-          .catch((e:any) => {
-            console.error(e, "Error getting balance");
-           
-          });
-    }, [])
-    
+  const [/* contractBal, */ setContractBal] = useState();
+
+  useEffect(() => {
+    const contract = getContract(erc20Abi, getAddress(addresses.zlt));
+    contract
+      .balanceOf("0x02f49F484da3c594576622a1116c05E295F47D1d")
+      .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toJSON();
+        const toNum = Number(bal);
+        const percentBal = (((25000000 - toNum) / 25000000) * 100).toFixed(2);
+        setContractBal(percentBal);
+      })
+      .catch((e: any) => {
+        console.error(e, "Error getting balance");
+      });
+  }, []);
+
+  const addTokenToMetaMask = async() =>{
+    try {
+    const { ethereum } = window
+    await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: "0x05D8762946fA7620b263E1e77003927addf5f7E6",  
+          symbol: `ZLT`,
+          decimals: 18,
+          image: 'https://zeroloss.finance/cdn/Zeroloss%20logo.png',
+        },
+      },
+    })
+  } catch (ex) {
+    console.error(ex)
+  }
+  }
 
   return (
     <Layout>
       <section className="text-white px-8 md:max-w-[80%] m-auto">
-
         <h1 className="text-5xl text-center font-bold text-yellow-400 my-10 leading-slug">
           Zeroloss Token Sale.
         </h1>
         <section className="text-center space-y-5 relative">
+        <button className="w-30 m-auto p-3 rounded-full font-extrabold bg-yellow-500" onClick={()=> addTokenToMetaMask()}>Add ZLT Token</button>
           <div className="space-y-5 relative">
             <p className="max-w-lg mx-auto">
               BUY ZLT, refer and earn 10% referral bonus in BUSD.
             </p>
             <div className="bg-[#191039] p-5 max-w-sm space-y-3 mx-auto rounded">
-
               {active && isApproved && (
                 <TextInput
                   errorMsg={errorMsg}
@@ -233,16 +265,18 @@ const BuyPage = ({ location }: PageProps) => {
               )}
             </div>
           </div>
-          {contractBal && (
-                      <>
-                        <p className="font-bold">Token Sale Progress.</p>
-                        <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
-                          <div className={`h-full absolute top-0 px-4 bg-yellow-400`} style={{width: `${contractBal}%`}}>
-                          </div>
-                            <p className="text-black text-center block m-auto font-bold" >{`${contractBal}%`}</p>
-                        </div>
-                      </>
-          )}
+          {/* {contractBal && (
+            <>
+              <p className="font-bold">Token Sale Progress.</p>
+              <div className="relative h-5 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
+                <div
+                  className={`h-full absolute top-0 px-4 bg-yellow-400`}
+                  style={{ width: `${contractBal}%` }}
+                ></div>
+                <p className="text-black text-center block m-auto font-bold">{`${contractBal}%`}</p>
+              </div>
+            </>
+          )} */}
         </section>
 
         <section className="text-center py-10">
@@ -384,12 +418,12 @@ const TextInput = ({
       >
         Buy ZLT
       </CustomButton>
+      {/* <button>Add Token</button> */}
+        {/* <button onClick={()=> addTokenToMetaMask()}>Add ZLT Token</button> */}
     </div>
   );
 };
 
 export default BuyPage;
 
-export const Head = () => (
-  <SEO title="Buy | Zeroloss" />
-)
+export const Head = () => <SEO title="Buy | Zeroloss" />;
