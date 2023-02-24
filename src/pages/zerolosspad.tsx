@@ -40,6 +40,10 @@ function zerolosspad() {
           <Link className="block mt-5" to="/buy">
             <Button>Buy ZLT for IDO</Button>
           </Link>
+          <p>Apply to launch on Zeroloss</p>
+          <a className="block mt-5" href="https://forms.gle/U2c724jmK1nBnpwt7">
+            <Button>Apply</Button>
+          </a>
         </div>
       </Section>
       <section className="px-4  text-white mt-32 text-center">
