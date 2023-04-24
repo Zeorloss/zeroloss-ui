@@ -21,10 +21,7 @@ const Header = () => {
             </menu>
         </nav>
         <div className='ml-auto lg:ml-10 flex gap-2'>
-            <Link to='/buy'>
-                <Button text="Buy"/>
-            </Link>
-            <Link to="/launchapp">
+            <Link to="/swap">
                 <Button text="Defi" bg="bg-yellow-400 " styling="py-1 px-2 rounded-md py-1 px-2"/>
             </Link>
             {/* <GrClose color='red' size="200px"/> */}

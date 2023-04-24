@@ -24,7 +24,7 @@ const launchapp = () => {
 
             <div className='mb-10 w-full md:basis-5/12 flex justify-center md:justify-starts text-black'>
               <div className='bg-white'>
-                <div id='kryptolite-swap-widget'  data-referraladdress="0x88813f879147ed09cc5c1cd61ed8daa349d7d2ab" data-basetoken="0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56" data-color='#E7BB0B'></div>
+                <div id='kryptolite-swap-widget'  data-referraladdress="0x88813f879147ed09cc5c1cd61ed8daa349d7d2ab" data-basetoken="0x05D8762946fA7620b263E1e77003927addf5f7E6" data-color='#E7BB0B'></div>
               </div>
             </div>
         </section>
@@ -43,6 +43,6 @@ const launchapp = () => {
 export default launchapp
 
 export const Head = () => (
-  <SEO title="LaunchApp | Zeroloss" />
+  <SEO title="Swap | Zeroloss" />
 )
 

@@ -37,7 +37,7 @@ function zerolosspad() {
             We facilitate the early stage funding of Metaverse projects and
             communities by amplifying them through Zeroloss POE culture.
           </p>
-          <Link className="block mt-5" to="/buy">
+          <Link className="block mt-5" to="/swap">
             <Button>Buy ZLT for IDO</Button>
           </Link>
           <p>Apply to launch on Zeroloss</p>

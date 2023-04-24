@@ -28,8 +28,8 @@ export const menuItem = [
       download: "false",
   },
   {
-      linkText: "Launch App",
-      url: "/launchapp",
+      linkText: "Swap",
+      url: "/swap",
       download: "false",
 
   },

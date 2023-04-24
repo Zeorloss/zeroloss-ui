@@ -8,7 +8,7 @@ const BuyAndSell = () => {
     <section className='flex flex-col text-white text-center py-10 md:py-16'>
       <h2 className=' text-2xl lg:basis-full mb-8 font-bold'>Buy, Sell and Exchange ZLT</h2>
       <div className="flex flex-col lg:flex-row justify-center gap-4 lg:gap-10">
-        <Link to="/buy">
+        <Link to="/swap">
           <Button styling='w-32 block m-auto rounded-md py-3' bg="bg-yellow-400" text="Buy"></Button>
         </Link>
       </div>

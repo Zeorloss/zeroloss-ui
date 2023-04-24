@@ -349,6 +349,7 @@ const BuyPage = () => {
   const addTokenToMetaMask = async() =>{
     try {
     const { ethereum } = window
+    // @ts-expect-error
     await ethereum.request({
       method: 'wallet_watchAsset',
       params: {
@@ -390,7 +391,7 @@ const BuyPage = () => {
                 </p>
                 {zltBal < zltThreshold && (
                   <Link
-                    to="/buy"
+                    to="/swap"
                     className="text-base underline hover:no-underline transition-all duration-300"
                   >
                     Insufficient ZLT, get some!

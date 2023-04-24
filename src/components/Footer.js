@@ -22,9 +22,8 @@ const Footer = () => {
       />
 
       <div className="flex gap-10 flex-wrap text-xl p-10">
-        <Link to="/launchapp">Launch App</Link>
+        <Link to="/swap">Swap</Link>
         <Link to="/faq">FAQ</Link>
-        <Link to="/buy">Buy</Link>
       </div>
 
       <div className="flex gap-10 p-16 my-10 border-solid border-slate-100 w-full border-t-[1px] border-b-[1px] justify-center items-center">

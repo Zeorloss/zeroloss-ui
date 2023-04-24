@@ -15,7 +15,7 @@ const Brands = () => {
       </div>
       <div>
         <span>and more exchanges...</span>
-        <Link to="/buy">
+        <Link to="/swap">
           <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Buy ZLT"/>
         </Link>
       </div>
