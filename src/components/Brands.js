@@ -12,6 +12,10 @@ const Brands = () => {
         <img src='/images/binance-logo.jpg' alt='Binance official logo'  width="250px"/>
         <img src='/images/ledger.png' alt='ledger official logo' width="250px" />
         <img src='/images/pancake.png' alt='pancake-swap official logo'  width="250px" />
+        <img src='/images/kimberlite.png' alt='Kimberlite logo' width="150px" />
+        <img src='/images/mises.jpeg' alt='Mises logo' width="150px" />
+        <img src='/images/taskon.png' alt='Task ON logo' width="150px" height="50px" />
+        <img src='/images/blockem.avif' alt='ledger logo' width="150px" />
       </div>
       <div>
         <span>and more exchanges...</span>

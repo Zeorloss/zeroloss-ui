@@ -11,6 +11,7 @@ const Support = () => {
         <img src='/images/trustwallet.png' alt='trust-wallet logo'  width="250px" />
         <img src='/images/metamask.png' alt='metamask logo'  width="250px"/>
         <img src='/images/ledger.png' alt='ledger logo' width="250px" />
+        
       </div>
       <Link to="https://bscscan.com/token/0x05d8762946fa7620b263e1e77003927addf5f7e6">
         <Button styling="p-10 py-1 px-2 rounded-md"  bg="bg-yellow-400" text="Token Explorer"/>
