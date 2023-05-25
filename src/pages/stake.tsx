@@ -27,18 +27,9 @@ const stake = (props: Props) => {
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>10 LP</span>
-                            <p className='text-base font-bold'>Earned</p>
-                        </div>
-                        <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>21%</span>
+                            <span>21 %</span>
                             <p className='text-base font-bold'>APY</p>
                         </div>
-                        <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>$12,493</span>
-                            <p className='text-base font-bold'>LP Price</p>
-                        </div>
-                        
                     </div>
 
                     <div className='basis-full'>
@@ -91,7 +82,7 @@ const stake = (props: Props) => {
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>21%</span>
+                            <span>21 %</span>
                             <p className='text-base font-bold'>APY</p>
                         </div>
                     </div>
