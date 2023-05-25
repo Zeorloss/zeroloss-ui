@@ -87,22 +87,13 @@ const stake = (props: Props) => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full justify-center'>
                         <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>10 LP</span>
+                            <span>10</span>
                             <p className='text-base font-bold'>Staked</p>
-                        </div>
-                        <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>1</span>
-                            <p className='text-base font-bold'># Stacked</p>
                         </div>
                         <div className='my-4 basis-5/12 md:basis-3/12'>
                             <span>21%</span>
                             <p className='text-base font-bold'>APY</p>
                         </div>
-                        <div className='my-4 basis-5/12 md:basis-3/12'>
-                            <span>$12,493</span>
-                            <p className='text-base font-bold'>LP Price</p>
-                        </div>
-                        
                     </div>
 
                     <div className='basis-full'>
