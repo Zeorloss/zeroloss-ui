@@ -49,7 +49,7 @@ const stake = (props: Props) => {
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Stake</p>
+                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: 10 ZLT</span> </div>
                             <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='text' />
                             <div className='flex items-center justify-center gap-3'>
                                 <span className='py-2 px-4 border border-solid border-slate-500'>25%</span>
@@ -71,7 +71,7 @@ const stake = (props: Props) => {
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
-                        <p className='font-bold my-2'>1.23 BUSD</p>
+                        <p className='font-bold my-2'>1.23 ZLT</p>
                         <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                     </div>
                 </div>
@@ -113,8 +113,9 @@ const stake = (props: Props) => {
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Stake</p>
+                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: 10 ZLT</span> </div>
                             <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='text' />
+                            
                             <div className='flex items-center justify-center gap-3'>
                                 <span className='py-2 px-4 border border-solid border-slate-500'>25%</span>
                                 <span className='py-2 px-4 border border-solid border-slate-500'>50%</span>
@@ -135,7 +136,7 @@ const stake = (props: Props) => {
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
-                        <p className='font-bold my-2'>1.23 BUSD</p>
+                        <p className='font-bold my-2'>1.23 ZLT</p>
                         <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                     </div>
                 </div>
@@ -200,7 +201,7 @@ const stake = (props: Props) => {
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
-                        <p className='font-bold my-2'>1.23 BUSD</p>
+                        <p className='font-bold my-2'>1.23 ZLT</p>
                         <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                     </div>
                 </div>
