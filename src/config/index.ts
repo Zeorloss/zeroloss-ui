@@ -31,7 +31,11 @@ export const addresses = {
   cfyc: {
     56: "0x03B6119662292b6BBecFc432B799a82Ae9157f12",
     97: ''
-  }
+  },
+  krlzlt: {
+    97: "",
+    56: "0x4951Afc961EA8cdbF536cA0afce91cA3eaa27768",
+  },
 };
 
 export const networkList = {
