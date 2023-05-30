@@ -8,71 +8,121 @@ import { getZltSaleAddress, getCfycSaleAddress, getAddress } from '../utils/addr
 import ConnectWalletButton from '../components/Buttons/ConnectWalletButton';
 import { useAppContext } from '../hooks/useAppContext';
 import erc20 from "../config/abi/erc20.json";
+import zltkrllp from "../config/abi/zltkrlLPstaking.json";
+import krl from "../config/abi/krlPool2.json";
 import { addresses } from '../config';
 import { BIG_TEN } from '../utils/bignumber';
 import BigNumber from "bignumber.js";
-
-
-
 
 type Props = {}
 
 const stake = (props: Props) => {
     const [zltBal, setZltBal] = useState(0);
+    const [stakedBal, setStakedBal] = useState(0);
     const [decimals, setDecimal] = useState(9);
     const [allowance, setAllowance] = useState(10);
-    const [stakeAmount, setStakeAmount] = useState<string | number>();
+    const [stakeAmount, setStakeAmount] = useState<string | number>(0);
+    const [unStakeAmount, setUnStakeAmount] = useState<string | number>(0);
     const [stakeAmountInwei, setStakeAmountInwei] = useState<string | BigNumberEth>()
+    const [unStakeAmountInwei, setUnStakeAmountInwei] = useState<string | BigNumberEth>()
     const [isApproving, setApproving]  = useState(false);
     const [fetching, setFetching] = useState(false);
     const [isApproved, setIsApproved] = useState(false);
+    const [pendingReward, setPendingReward] = useState<number>(0);
 
     const { active, account, library } = useActiveWeb3React();
+
 
     const { onApprove } = useApproveToken(
         getKRLZLTContract(library?.getSigner()),
         getZltSaleAddress()
       );
-      const handleApprove = useCallback(async () => {
+
+    const handleApprove = useCallback(async () => {
         if (account && library) {
-          setFetching(true);
-          try {
-            await onApprove();
-            setIsApproved(true);
-          } catch (e) {
-            console.error(e);
-            // toastError(
-            //   "Error",
-            //   "Please try again. Confirm the transaction and make sure you are paying enough gas!"
-            // );
-            setIsApproved(false);
-          } finally {
-            setFetching(false);
-          }
+            setFetching(true);
+            try {
+                await onApprove();
+                setIsApproved(true);
+            } catch (e) {
+                console.error(e);
+                setIsApproved(false);
+            } finally {
+                setFetching(false);
+            }
         }
-      }, [onApprove, account, library]);
+    }, [onApprove, account, library]);
 
-      const {
-        triggerFetchTokens,
-        wallet: { balance },
-      } = useAppContext();
+    const handleUnstake = ()=>{
+        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        lpContract.withdraw(account, unStakeAmount)
+        .catch((e: any) => {
+            console.log("error unsatke: " + e?.message);
+        });
+    }
 
-      const contract = getContract(erc20, getAddress(addresses.zlt), library?.getSigner())
-      contract
-          .balanceOf(account)
-          .then((p: ethers.BigNumber) => {
-            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            setZltBal(bal);
-          })
-          .catch(() => {
-            // console.error(e, "Error getting balance");
-            setZltBal(0);
-          });
+    const handleStake = ()=>{
+        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        lpContract.deposit(account, stakeAmount)
+        .catch((e: any) => {
+            console.log("error stake: " + e?.message);
+        });
+    }
 
-          const handlePercentageOfBal = (percent: number) =>{
-            const amount = (percent/100) * zltBal;
-            setStakeAmount(amount);
-          }
+    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+    lpContract.pendingReward(account)
+    .then((p: ethers.BigNumber) => {
+      const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+      console.log("pending reward: " + bal);
+    })
+    .catch((e: any) => {
+      console.log("error" + e?.message);
+    });
+
+    // read amount staked
+    lpContract.userInfo(account)
+    .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        setStakedBal(bal);
+        console.log("amount staked: " + p);
+    })
+    .catch(() => {
+        console.log("error");
+    });
+
+    const handleHarvest = () =>{
+    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+
+    lpContract.deposit(account, 0)
+    .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("deposit fn: " + bal);
+    })
+    .catch(() => {
+        console.log("error");
+    });
+    }
+    
+    const handlePercentageOfBal = (percent: number) =>{
+        const amount = (percent/100) * zltBal;
+        setStakeAmount(amount);
+    }
+    
+    const handlePercentageOfStaked = (percent: number) =>{
+        const amount = (percent/100) * stakedBal;
+        setUnStakeAmount(amount);
+    }
+    
+    const contract = getContract(erc20, getAddress(addresses.zlt), library?.getSigner())
+    contract.balanceOf(account)
+    .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        setZltBal(bal);
+    })
+    .catch(() => {
+    setZltBal(0);
+    });
+
   return (
     <Layout>
         <div className='p-4 text-white'>
@@ -92,7 +142,7 @@ const stake = (props: Props) => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full items-center justify-center'>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>10 LP</span>
+                            <span>{stakedBal} LP</span>
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
@@ -134,17 +184,25 @@ const stake = (props: Props) => {
                             {active && !isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
+                                onClick={Number(allowance) >= Number(stakeAmount) ? handleStake : handleApprove}
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approve"}</button>
                             )}
                         </div>
-                        <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Harvest</p>
-                            <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
+                        {stakedBal>1 && (
+                            <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
+                            <p className='text-2xl font-semibold'>Unstake</p>
+                            <input
+                                onChange={(e) => {
+                                    setUnStakeAmount(e.target.value);
+                                    setUnStakeAmountInwei(
+                                      ethers.utils.parseUnits(e.target.value, decimals)
+                                    );
+                                }}
+                                 value={unStakeAmount} placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
                             <div className='flex items-center justify-center gap-3'>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>25%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>50%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>100%</span>
+                                <span onClick={()=>handlePercentageOfStaked(25)} className='py-2 px-4 border border-solid border-slate-500'>25%</span>
+                                <span onClick={()=>handlePercentageOfStaked(50)} className='py-2 px-4 border border-solid border-slate-500'>50%</span>
+                                <span onClick={()=>handlePercentageOfStaked(100)} className='py-2 px-4 border border-solid border-slate-500'>100%</span>
                             </div>
                             {!active && (
                                 <Fragment>
@@ -155,16 +213,17 @@ const stake = (props: Props) => {
                             {active && !isApproved && (
                                 <button 
                                     disabled={isApproving}
-                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
-                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Approve</button>
+                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=> handleUnstake : handleApprove}
+                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Unstake</button>
                             )}
 
                         </div>
+                        )}
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
-                        <p className='font-bold my-2'>1.23 ZLT</p>
-                        <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
+                        <p className='font-bold my-2'>{pendingReward} ZLT</p>
+                        <button onClick={handleHarvest} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                     </div>
                 </div>
             </div>

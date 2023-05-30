@@ -36,6 +36,14 @@ export const addresses = {
     97: "",
     56: "0x4951Afc961EA8cdbF536cA0afce91cA3eaa27768",
   },
+  krl: {
+    97: "",
+    56: "0xF1288cF18B1FAaA35F40111c3E5d2f827e1E920E",
+  },
+  zltkrlstakinglp: {
+    97: "",
+    56: "0x7d9127869d26090e44cCcdb8Ff246DD8Fc28b4E8",
+  },
 };
 
 export const networkList = {
