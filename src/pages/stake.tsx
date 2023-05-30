@@ -18,7 +18,7 @@ type Props = {}
 
 const stake = (props: Props) => {
     const [zltBal, setZltBal] = useState(0);
-    const [stakedBal, setStakedBal] = useState(0);
+    const [stakedBal, setStakedBal] = useState<number | ethers.BigNumber>(0);
     const [decimals, setDecimal] = useState(9);
     const [allowance, setAllowance] = useState(10);
     const [stakeAmount, setStakeAmount] = useState<string | number>(0);
@@ -82,8 +82,8 @@ const stake = (props: Props) => {
     // read amount staked
     lpContract.userInfo(account)
     .then((p: ethers.BigNumber) => {
-        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        setStakedBal(bal);
+        // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        setStakedBal(p);
         console.log("amount staked: " + p);
     })
     .catch(() => {
@@ -109,7 +109,7 @@ const stake = (props: Props) => {
     }
     
     const handlePercentageOfStaked = (percent: number) =>{
-        const amount = (percent/100) * stakedBal;
+        const amount = Number(stakedBal) * (percent/100) ;
         setUnStakeAmount(amount);
     }
     
@@ -142,7 +142,7 @@ const stake = (props: Props) => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full items-center justify-center'>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>{stakedBal} LP</span>
+                            <span>{stakedBal.toString()} LP</span>
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
@@ -188,7 +188,7 @@ const stake = (props: Props) => {
                                 className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approve"}</button>
                             )}
                         </div>
-                        {stakedBal>1 && (
+                        {Number(stakedBal)>1 && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                             <p className='text-2xl font-semibold'>Unstake</p>
                             <input
