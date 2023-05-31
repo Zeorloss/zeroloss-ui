@@ -4,7 +4,7 @@ import { BigNumber as BigNumberEth, Signer, Contract, ethers } from 'ethers';
 import useApproveToken from '../hooks/useApproveToken';
 import { getContract, getKRLZLTContract, } from '../utils/contractHelpers';
 import useActiveWeb3React from '../hooks/useActiveWeb3React';
-import { getZltSaleAddress, getCfycSaleAddress, getAddress } from '../utils/addressHelpers';
+import { getZltSaleAddress, getCfycSaleAddress, getAddress, getKrlZltLPAddress } from '../utils/addressHelpers';
 import ConnectWalletButton from '../components/Buttons/ConnectWalletButton';
 import { useAppContext } from '../hooks/useAppContext';
 import erc20 from "../config/abi/erc20.json";
@@ -35,7 +35,7 @@ const stake = (props: Props) => {
 
     const { onApprove } = useApproveToken(
         getKRLZLTContract(library?.getSigner()),
-        getZltSaleAddress()
+        getKrlZltLPAddress()
       );
 
     const handleApprove = useCallback(async () => {
@@ -79,6 +79,7 @@ const stake = (props: Props) => {
       console.log("error" + e?.message);
     });
 
+    console.log("rerun");
     // read amount staked
     lpContract.userInfo(account)
     .then((p: ethers.BigNumber) => {
@@ -113,7 +114,7 @@ const stake = (props: Props) => {
         setUnStakeAmount(amount);
     }
     
-    const contract = getContract(erc20, getAddress(addresses.zlt), library?.getSigner())
+    const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
     contract.balanceOf(account)
     .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();

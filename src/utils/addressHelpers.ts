@@ -7,6 +7,7 @@ export const getAddress = (address: Address): string => {
 };
 
 export const getKrlAddress = () => getAddress(addresses.krlzlt);
+export const getKrlZltLPAddress = () => getAddress(addresses.zltkrlstakinglp);
 export const getBusdAddress = () => getAddress(addresses.busd);
 export const getZltSaleAddress = () => getAddress(addresses.zltSale);
 export const getCfycSaleAddress = () => getAddress(addresses.cfycSale); 
