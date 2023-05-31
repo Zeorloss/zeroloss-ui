@@ -114,7 +114,7 @@ const stake = (props: Props) => {
         setUnStakeAmount(amount);
     }
     
-    const contract = getContract(erc20, getAddress(addresses.zltkrlstakinglp), library?.getSigner())
+    const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
     contract.balanceOf(account)
     .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
