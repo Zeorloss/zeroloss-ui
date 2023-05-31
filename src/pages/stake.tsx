@@ -114,13 +114,15 @@ const stake = (props: Props) => {
         setUnStakeAmount(amount);
     }
     
-    const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
+    const contract = getContract(erc20, getAddress(addresses.zltkrlstakinglp), library?.getSigner())
     contract.balanceOf(account)
     .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("bal");
         setZltBal(bal);
     })
     .catch(() => {
+        console.log("bal erro");
     setZltBal(0);
     });
 
@@ -160,7 +162,7 @@ const stake = (props: Props) => {
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal} ZLT</span> </div>
+                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal} LP</span> </div>
                             <input
                                 
                                 onChange={(e) => {
