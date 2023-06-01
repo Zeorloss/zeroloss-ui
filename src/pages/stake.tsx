@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import React, { Fragment, useEffect, useState, useCallback } from 'react';
 import Layout from '../components/Layout';
 import { BigNumber as BigNumberEth, Signer, Contract, ethers } from 'ethers';
 import useApproveToken from '../hooks/useApproveToken';
@@ -13,6 +13,8 @@ import krl from "../config/abi/krlPool2.json";
 import { addresses } from '../config';
 import { BIG_TEN } from '../utils/bignumber';
 import BigNumber from "bignumber.js";
+import { MaxUint256 } from "@ethersproject/constants";
+
 
 type Props = {}
 
@@ -63,7 +65,7 @@ const stake = (props: Props) => {
 
     const handleStake = ()=>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-        lpContract.deposit(account, stakeAmount)
+        lpContract.deposit(1)
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
         });
@@ -81,7 +83,10 @@ const stake = (props: Props) => {
 
     console.log("rerun");
     // read amount staked
-    lpContract.userInfo(account)
+    useEffect(()=>{
+    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+
+        lpContract.userInfo(account)
     .then((p: ethers.BigNumber) => {
         // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
         setStakedBal(p);
@@ -90,19 +95,20 @@ const stake = (props: Props) => {
     .catch(() => {
         console.log("error");
     });
+    }, [])
 
     const handleHarvest = () =>{
-    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
 
-    lpContract.deposit(account, 0)
-    .then((p: ethers.BigNumber) => {
-        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        console.log("deposit fn: " + bal);
-    })
-    .catch(() => {
-        console.log("error");
-    });
-    }
+        lpContract.deposit(account, 0)
+        .then((p: ethers.BigNumber) => {
+            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log("deposit fn: " + bal);
+        })
+        .catch(() => {
+            console.log("error");
+        });
+        }
     
     const handlePercentageOfBal = (percent: number) =>{
         const amount = (percent/100) * zltBal;
@@ -114,17 +120,47 @@ const stake = (props: Props) => {
         setUnStakeAmount(amount);
     }
     
-    const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
-    contract.balanceOf(account)
-    .then((p: ethers.BigNumber) => {
-        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        console.log("bal");
-        setZltBal(bal);
-    })
-    .catch(() => {
-        console.log("bal erro");
-    setZltBal(0);
-    });
+    useEffect(()=>{
+        const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
+        contract.balanceOf(account)
+        .then((p: ethers.BigNumber) => {
+            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log("bal");
+            setZltBal(bal);
+        })
+        .catch(() => {
+            console.log("bal erro");
+        setZltBal(0);
+        });
+
+    }, [account, library]);
+
+    useEffect(() => {
+        (async () => {
+          // setRequesting(true);
+          if (account && library) {
+            const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner());
+            contract
+              .allowance(account, getKrlZltLPAddress())
+              .then(({ _hex }: any) => {
+                if (MaxUint256.eq(_hex)) {
+                    console.log("good");
+                    setIsApproved(true);
+                } else {
+                    console.log("bad");
+                  setIsApproved(false);
+                }
+                return MaxUint256.eq(_hex); // return promise for finally to run
+              })
+              .finally(() => {
+                // setRequesting(false);
+              });
+          } else {
+            setIsApproved(false);
+            // setIsRequesting(false);
+          }
+        })();
+      }, [account, library, isApproved]);
 
   return (
     <Layout>
@@ -187,8 +223,14 @@ const stake = (props: Props) => {
                             {active && !isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={Number(allowance) >= Number(stakeAmount) ? handleStake : handleApprove}
+                                onClick={Number(allowance) >= Number(stakeAmount) ? handleApprove : handleStake}
                                 className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approve"}</button>
+                            )}
+                            {active && isApproved && (
+                            <button
+                                disabled={isApproving}
+                                onClick={Number(allowance) >= Number(stakeAmount) ? handleStake : handleApprove}
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stakes" : "Approves"}</button>
                             )}
                         </div>
                         {Number(stakedBal)>1 && (
