@@ -20,7 +20,7 @@ type Props = {}
 
 const stake = (props: Props) => {
     const [zltBal, setZltBal] = useState(0);
-    const [stakedBal, setStakedBal] = useState<number | ethers.BigNumber>(0);
+    const [stakedBal, setStakedBal] = useState<number>(0);
     const [decimals, setDecimal] = useState(9);
     const [allowance, setAllowance] = useState(10);
     const [stakeAmount, setStakeAmount] = useState<string | number>(0);
@@ -65,7 +65,10 @@ const stake = (props: Props) => {
 
     const handleStake = ()=>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-        lpContract.deposit(1)
+        console.log(Number(stakeAmount).toString(16));
+      const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+
+        lpContract.deposit(value)
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
         });
@@ -88,14 +91,14 @@ const stake = (props: Props) => {
 
         lpContract.userInfo(account)
     .then((p: ethers.BigNumber) => {
-        // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        setStakedBal(p);
-        console.log("amount staked: " + p);
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("amount staked: " + bal);
+        setStakedBal(bal);
     })
     .catch(() => {
         console.log("error");
     });
-    }, [])
+    }, [account, library, onApprove])
 
     const handleHarvest = () =>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -112,12 +115,12 @@ const stake = (props: Props) => {
     
     const handlePercentageOfBal = (percent: number) =>{
         const amount = (percent/100) * zltBal;
-        setStakeAmount(amount);
+        setStakeAmount(amount.toFixed(2));
     }
     
     const handlePercentageOfStaked = (percent: number) =>{
         const amount = Number(stakedBal) * (percent/100) ;
-        setUnStakeAmount(amount);
+        setUnStakeAmount(amount.toFixed(2));
     }
     
     useEffect(()=>{
@@ -181,7 +184,7 @@ const stake = (props: Props) => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full items-center justify-center'>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>{stakedBal.toString()} LP</span>
+                            <span>{stakedBal.toString().slice(stakedBal.toString().indexOf("."), stakedBal.toString().indexOf(".") + 2 )} LP</span>
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
@@ -198,7 +201,7 @@ const stake = (props: Props) => {
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal} LP</span> </div>
+                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal.toFixed(2)} LP</span> </div>
                             <input
                                 
                                 onChange={(e) => {
@@ -230,12 +233,13 @@ const stake = (props: Props) => {
                             <button
                                 disabled={isApproving}
                                 onClick={Number(allowance) >= Number(stakeAmount) ? handleStake : handleApprove}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stakes" : "Approves"}</button>
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approves"}</button>
                             )}
                         </div>
-                        {Number(stakedBal)>1 && (
+                        {true && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                             <p className='text-2xl font-semibold'>Unstake</p>
+                            <p>Staked: {stakedBal}</p>
                             <input
                                 onChange={(e) => {
                                     setUnStakeAmount(e.target.value);
