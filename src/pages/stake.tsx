@@ -85,20 +85,22 @@ const stake = (props: Props) => {
     });
 
     console.log("rerun");
+
+
     // read amount staked
     useEffect(()=>{
-    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
 
-        lpContract.userInfo(account)
-    .then((p: ethers.BigNumber) => {
-        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        console.log("amount staked: " + bal);
-        setStakedBal(bal);
-    })
-    .catch(() => {
-        console.log("error");
-    });
-    }, [account, library, onApprove])
+            lpContract.userInfo(account)
+        .then((p: ethers.BigNumber) => {
+            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log("amount staked: " + bal);
+            setStakedBal(bal);
+        })
+        .catch((e:any) => {
+            console.log("amount staked error" + e);
+        });
+    }, [account])
 
     const handleHarvest = () =>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -128,7 +130,7 @@ const stake = (props: Props) => {
         contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("bal");
+            console.log("bal: " + bal );
             setZltBal(bal);
         })
         .catch(() => {
