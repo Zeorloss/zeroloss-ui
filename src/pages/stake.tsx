@@ -74,17 +74,18 @@ const stake = (props: Props) => {
         });
     }
 
-    const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-    lpContract.pendingReward(account)
-    .then((p: ethers.BigNumber) => {
-      const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-      console.log("pending reward: " + bal);
-    })
-    .catch((e: any) => {
-      console.log("error" + e?.message);
-    });
+    useEffect(()=>{
+            const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        lpContract.pendingReward(account)
+        .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("pending reward: " + bal);
+        })
+        .catch((e: any) => {
+        console.log("error" + e?.message);
+        });
+    }, [])
 
-    console.log("rerun");
 
 
     // read amount staked
@@ -113,7 +114,7 @@ const stake = (props: Props) => {
         .catch(() => {
             console.log("error");
         });
-        }
+    }
     
     const handlePercentageOfBal = (percent: number) =>{
         const amount = (percent/100) * zltBal;
