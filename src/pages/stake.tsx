@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useState, useCallback } from 'react';
 import Layout from '../components/Layout';
-import { BigNumber as BigNumberEth, Signer, Contract, ethers } from 'ethers';
+import { BigNumber as BigNumberEth, ethers } from 'ethers';
 import useApproveToken from '../hooks/useApproveToken';
 import { getContract, getKRLZLTContract, } from '../utils/contractHelpers';
 import useActiveWeb3React from '../hooks/useActiveWeb3React';
-import { getZltSaleAddress, getCfycSaleAddress, getAddress, getKrlZltLPAddress } from '../utils/addressHelpers';
+import { getAddress, getKrlZltLPAddress } from '../utils/addressHelpers';
 import ConnectWalletButton from '../components/Buttons/ConnectWalletButton';
-import { useAppContext } from '../hooks/useAppContext';
+// import { useAppContext } from '../hooks/useAppContext';
 import erc20 from "../config/abi/erc20.json";
 import zltkrllp from "../config/abi/zltkrlLPstaking.json";
-import krl from "../config/abi/krlPool2.json";
+// import krl from "../config/abi/krlPool2.json";
 import { addresses } from '../config';
 import { BIG_TEN } from '../utils/bignumber';
 import BigNumber from "bignumber.js";
@@ -61,7 +61,17 @@ const stake = (props: Props) => {
         console.log("unstake: " + value)
 
         lpContract.withdraw(value)
-        .then((ret:any) => console.log("withdraw: " + ret))
+        .then((transaction:any) => {
+            // Transaction successfully sent
+            console.log("Transaction sent:", transaction.hash);
+      
+            // Wait for the transaction to be confirmed
+            return transaction.wait();
+          })
+        .then((ret:any) => {
+            setStakeAmount(0)
+            console.log("withdraw: " + ret)
+        })
         .catch((e: any) => {
             console.log("error unsatke: " + e?.message);
         });
@@ -73,6 +83,14 @@ const stake = (props: Props) => {
       const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
 
         lpContract.deposit(value)
+        .then((transaction:any) => {
+            // Transaction successfully sent
+            console.log("Transaction sent:", transaction.hash);
+      
+            // Wait for the transaction to be confirmed
+            return transaction.wait();
+          })
+        .then(()=>{setStakeAmount(0); console.log("stakeAMount set");})
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
         });
@@ -100,18 +118,10 @@ const stake = (props: Props) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
             console.log(bal);
             setStakedBal(bal);
-            // console.log(a);
-            // .then((p: ethers.BigNumber) => {
-            //     console.log("amount staked: " + p) ;
-            // })
-            // .catch((e:any) => {
-            //     console.log("amount staked error" + e);
-            // })
-
         }
 
         getStakedAmount();
-    }, [account, library])
+    }, [account, library, stakeAmount])
 
     const handleHarvest = () =>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -141,7 +151,7 @@ const stake = (props: Props) => {
         contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("bal: " + bal );
+            console.log("balances: " + bal );
             setZltBal(bal);
         })
         .catch(() => {
@@ -149,7 +159,7 @@ const stake = (props: Props) => {
         setZltBal(0);
         });
 
-    }, [account, library]);
+    }, [account, library, stakeAmount]);
 
     useEffect(() => {
         (async () => {
