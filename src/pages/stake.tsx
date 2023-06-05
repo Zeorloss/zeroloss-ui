@@ -57,7 +57,11 @@ const stake = (props: Props) => {
 
     const handleUnstake = ()=>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-        lpContract.withdraw(account, unStakeAmount)
+        const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        console.log("unstake: " + value)
+
+        lpContract.withdraw(value)
+        .then((ret:any) => console.log("withdraw: " + ret))
         .catch((e: any) => {
             console.log("error unsatke: " + e?.message);
         });
@@ -84,24 +88,30 @@ const stake = (props: Props) => {
         .catch((e: any) => {
         console.log("error" + e?.message);
         });
-    }, [])
+    }, [account])
 
 
 
     // read amount staked
     useEffect(()=>{
-        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-
-            lpContract.userInfo(account)
-        .then((p: ethers.BigNumber) => {
+        const getStakedAmount = async()=>{
+            const cont = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+            const [p, a] = await cont.userInfo(account)
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("amount staked: " + bal);
+            console.log(bal);
             setStakedBal(bal);
-        })
-        .catch((e:any) => {
-            console.log("amount staked error" + e);
-        });
-    }, [account])
+            // console.log(a);
+            // .then((p: ethers.BigNumber) => {
+            //     console.log("amount staked: " + p) ;
+            // })
+            // .catch((e:any) => {
+            //     console.log("amount staked error" + e);
+            // })
+
+        }
+
+        getStakedAmount();
+    }, [account, library])
 
     const handleHarvest = () =>{
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -145,8 +155,8 @@ const stake = (props: Props) => {
         (async () => {
           // setRequesting(true);
           if (account && library) {
-            const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner());
-            contract
+            const krlzltContract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner());
+            krlzltContract
               .allowance(account, getKrlZltLPAddress())
               .then(({ _hex }: any) => {
                 if (MaxUint256.eq(_hex)) {
@@ -239,10 +249,11 @@ const stake = (props: Props) => {
                                 className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approves"}</button>
                             )}
                         </div>
-                        {true && (
+                        {stakedBal >0 && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Unstake</p>
-                            <p>Staked: {stakedBal}</p>
+                                <div className='text-2xl font-semibold flex justify-between items-end'><span>Unstake </span><span className='text-xs'>Staked: {stakedBal} LP</span> </div>
+                            {/* <p className='text-2xl font-semibold'>Unstake</p> */}
+                            {/* <p>Staked: {stakedBal}</p> */}
                             <input
                                 onChange={(e) => {
                                     setUnStakeAmount(e.target.value);
@@ -262,10 +273,10 @@ const stake = (props: Props) => {
                                 <p className="text-sm text-center">Connect your wallet.</p>
                                 </Fragment>
                             )}
-                            {active && !isApproved && (
+                            {active && isApproved && (
                                 <button 
                                     disabled={isApproving}
-                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=> handleUnstake : handleApprove}
+                                    onClick={Number(unStakeAmount)> 0 ? handleUnstake : ()=>console.log('handle')}
                                     className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Unstake</button>
                             )}
 
