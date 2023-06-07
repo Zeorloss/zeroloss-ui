@@ -6,31 +6,48 @@ import { getContract, getKRLZLTContract, } from '../utils/contractHelpers';
 import useActiveWeb3React from '../hooks/useActiveWeb3React';
 import { getAddress, getKrlZltLPAddress } from '../utils/addressHelpers';
 import ConnectWalletButton from '../components/Buttons/ConnectWalletButton';
-// import { useAppContext } from '../hooks/useAppContext';
 import erc20 from "../config/abi/erc20.json";
+import zltNftPool from "../config/abi/ZerolossNftPoolABI.json";
 import zltkrllp from "../config/abi/zltkrlLPstaking.json";
-// import krl from "../config/abi/krlPool2.json";
+import zltNftAbi from "../config/abi/ZltNftABI.json";
 import { addresses } from '../config';
 import { BIG_TEN } from '../utils/bignumber';
 import BigNumber from "bignumber.js";
 import { MaxUint256 } from "@ethersproject/constants";
+import { TailSpin } from 'react-loader-spinner';
 
 
-type Props = {}
 
-const stake = (props: Props) => {
+    // getuserPoolinfo takes user address
+
+
+const stake = () => {
     const [zltBal, setZltBal] = useState(0);
+    const [loadingApproveNFT, setLoadingApproveNFT] = useState<boolean>(false);
+    const [loadingApproveToken, setLoadingApproveToken] = useState<boolean>(false);
+    const [loadingUnStakeToken, setLoadingUnStakeToken] = useState<boolean>(false);
+    const [loadingUnstakeNFT, setLoadingUnstakeNFT] = useState<boolean>(false);
+    const [loadingStakeToken, setLoadingStakeToken] = useState<boolean>(false);
+    const [loadingStakeNFT, setLoadingStakeNFT] = useState<boolean>(false);
+    const [zltNFTBal, setZltNFTBal] = useState<number[]>([]);
     const [stakedBal, setStakedBal] = useState<number>(0);
+    const [zltNFTStakedId, setZltNFTStakedId] = useState<number[]>([]);
+    const [zltNFTToStakeId, setZltNFTToStakeId] = useState<number>(0);
+    const [zltNFTToUnStakeId, setZltNFTToUnStakeId] = useState<number>(0);
     const [decimals, setDecimal] = useState(9);
     const [allowance, setAllowance] = useState(10);
     const [stakeAmount, setStakeAmount] = useState<string | number>(0);
+    const [NFTId, setNFTId] = useState<number>(0);
+    const [NFTUnstakeId, setNFTUnStakeId] = useState<number>(0);
     const [unStakeAmount, setUnStakeAmount] = useState<string | number>(0);
     const [stakeAmountInwei, setStakeAmountInwei] = useState<string | BigNumberEth>()
     const [unStakeAmountInwei, setUnStakeAmountInwei] = useState<string | BigNumberEth>()
     const [isApproving, setApproving]  = useState(false);
+    const [nftApproval, setNftApproval] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [isApproved, setIsApproved] = useState(false);
     const [pendingReward, setPendingReward] = useState<number>(0);
+    const [loadingHarvestToken, setLoadingHarvestToken] = useState<boolean>(false);
 
     const { active, account, library } = useActiveWeb3React();
 
@@ -43,6 +60,7 @@ const stake = (props: Props) => {
     const handleApprove = useCallback(async () => {
         if (account && library) {
             setFetching(true);
+            setLoadingApproveToken(true)
             try {
                 await onApprove();
                 setIsApproved(true);
@@ -51,15 +69,54 @@ const stake = (props: Props) => {
                 setIsApproved(false);
             } finally {
                 setFetching(false);
+                setLoadingApproveToken(false);
+
             }
         }
     }, [onApprove, account, library]);
 
+    const handleApproveNFT = async() =>{
+        setLoadingApproveNFT(true);
+        try{
+            const contractNFT = getContract(zltNftAbi, getAddress(addresses.zltnft), library?.getSigner());
+            await contractNFT.approve(addresses.zltNftstaking[56], zltNFTToStakeId)
+            .then((transaction:any)=>{
+                console.log('transaction sent: ' + transaction.hash);
+                return transaction.wait();
+            })
+            .then((response:any)=>{
+                console.log('approving smart contract:' + response);
+                setLoadingApproveNFT(false);
+            })
+            
+        } catch (error) {
+            setLoadingApproveNFT(false);
+            console.error('Error approving smart contract:', error);
+        }
+    }
+
+    const handleUnstakeNFT = ()=>{
+        setLoadingUnstakeNFT(true)
+        const contract = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
+        contract.unstake(zltNFTToUnStakeId)
+        .then((transaction:any) => {
+            return transaction.wait();
+          })
+        .then((ret:any) => {
+            setLoadingUnstakeNFT(false)
+        })
+        .catch((e: any) => {
+            setLoadingUnstakeNFT(false)
+            console.log("error unstake: " + e?.message);
+        });
+    }
+
     const handleUnstake = ()=>{
+        setLoadingUnStakeToken(true);
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
         const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toJSON();
         console.log("unstake: " + value)
-
+        
         lpContract.withdraw(value)
         .then((transaction:any) => {
             // Transaction successfully sent
@@ -68,19 +125,21 @@ const stake = (props: Props) => {
             // Wait for the transaction to be confirmed
             return transaction.wait();
           })
-        .then((ret:any) => {
-            setStakeAmount(0)
-            console.log("withdraw: " + ret)
-        })
-        .catch((e: any) => {
-            console.log("error unsatke: " + e?.message);
-        });
-    }
-
+          .then((ret:any) => {
+              setStakeAmount(0)
+              console.log("withdraw: " + ret)
+            })
+            .catch((e: any) => {
+                console.log("error unsatke: " + e?.message);
+            });
+            setLoadingUnStakeToken(false);
+        }
+        
     const handleStake = ()=>{
+        setLoadingStakeToken(true);
+        
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-        console.log(Number(stakeAmount).toString(16));
-      const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
 
         lpContract.deposit(value)
         .then((transaction:any) => {
@@ -94,6 +153,22 @@ const stake = (props: Props) => {
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
         });
+        setLoadingStakeToken(false);
+    }
+
+    
+    const handleStakeNFT = ()=>{
+        setLoadingStakeNFT(true);
+        const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
+        contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.005') })
+        .then((transaction:any) => {
+            return transaction.wait();
+          })
+        .then((r:any)=>{ console.log("stakeAMount set" + r );})
+        .catch((e: any) => {
+            console.log("error stake: " + e?.message);
+        });
+        setLoadingStakeNFT(false);
     }
 
     useEffect(()=>{
@@ -106,9 +181,9 @@ const stake = (props: Props) => {
         .catch((e: any) => {
         console.log("error" + e?.message);
         });
+
+        
     }, [account])
-
-
 
     // read amount staked
     useEffect(()=>{
@@ -122,8 +197,24 @@ const stake = (props: Props) => {
 
         getStakedAmount();
     }, [account, library, stakeAmount])
+    
+    // READ NFT AMOUNT STAKED
+    useEffect(()=>{
+        const getStakedAmount = async()=>{
+            const cont = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
+            const [bal, id, reward] = await cont.getUserPoolInfo(account)
+            // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log(bal);
+            console.log(id);
+            console.log(reward);
+            setZltNFTStakedId(id);
+        }
+
+        getStakedAmount();
+    }, [account, library])
 
     const handleHarvest = () =>{
+        setLoadingHarvestToken(true);
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
 
         lpContract.deposit(account, 0)
@@ -134,17 +225,37 @@ const stake = (props: Props) => {
         .catch(() => {
             console.log("error");
         });
+        setLoadingHarvestToken(false);
     }
     
-    const handlePercentageOfBal = (percent: number) =>{
+    const handlePercentageOfTokenBal = (percent: number) =>{
         const amount = (percent/100) * zltBal;
         setStakeAmount(amount.toFixed(2));
     }
     
-    const handlePercentageOfStaked = (percent: number) =>{
+    const handlePercentageOfStakedToken = (percent: number) =>{
         const amount = Number(stakedBal) * (percent/100) ;
         setUnStakeAmount(amount.toFixed(2));
     }
+
+    const handleSelectNFTToStake= (id:number)=>{
+        setZltNFTToStakeId(id)
+        const conn = getContract(zltNftAbi, getAddress(addresses.zltnft), library?.getSigner());
+        conn.getApproved(id)
+        .then((approvedAddress:string)=>{
+
+            if(approvedAddress.toLowerCase() == addresses.zltNftstaking[56].toLowerCase()){
+                setNftApproval(true);
+            }else{
+                setNftApproval(false);
+                console.log("not aproved");
+            }
+        }).
+        catch((e:any)=>{
+            console.log("error approval: "+ e)
+        })
+    }
+    const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
         const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
@@ -158,8 +269,21 @@ const stake = (props: Props) => {
             console.log("bal erro");
         setZltBal(0);
         });
+        
+        const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner())
+        contractNFT.walletOfOwner(account)
+        .then((p:number[]) => {
+            setZltNFTBal(p);
+        })
+        .catch(() => {
+            console.log("bal erro");
+            setZltNFTBal([]);
+        });
 
-    }, [account, library, stakeAmount]);
+        
+
+
+    }, [account, library]);
 
     useEffect(() => {
         (async () => {
@@ -207,7 +331,7 @@ const stake = (props: Props) => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full items-center justify-center'>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>{stakedBal.toString().slice(stakedBal.toString().indexOf("."), stakedBal.toString().indexOf(".") + 2 )} LP</span>
+                            <span>{stakedBal} LP</span>
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
@@ -236,9 +360,9 @@ const stake = (props: Props) => {
                                 
                                 value={stakeAmount} className='w-full bg-[#393939] p-2 my-4' type='number' />
                             <div className='flex items-center justify-center gap-3'>
-                                <span onClick={()=>handlePercentageOfBal(25)} className='py-2 px-4 border border-solid border-slate-500'>25%</span>
-                                <span onClick={()=>handlePercentageOfBal(50)} className='py-2 px-4 border border-solid border-slate-500'>50%</span>
-                                <span onClick={()=>handlePercentageOfBal(100)} className='py-2 px-4 border border-solid border-slate-500'>100%</span>
+                                <span onClick={()=>handlePercentageOfTokenBal(25)} className='py-2 px-4 border border-solid border-slate-500'>25%</span>
+                                <span onClick={()=>handlePercentageOfTokenBal(50)} className='py-2 px-4 border border-solid border-slate-500'>50%</span>
+                                <span onClick={()=>handlePercentageOfTokenBal(100)} className='py-2 px-4 border border-solid border-slate-500'>100%</span>
                             </div>
                             {!active && (
                                 <Fragment>
@@ -249,14 +373,14 @@ const stake = (props: Props) => {
                             {active && !isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={Number(allowance) >= Number(stakeAmount) ? handleApprove : handleStake}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approve"}</button>
+                                onClick={nftApproval ? handleStake : handleApprove}
+                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"}{loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
                             {active && isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={Number(allowance) >= Number(stakeAmount) ? handleStake : handleApprove}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approves"}</button>
+                                onClick={nftApproval ? handleStake : handleApprove}
+                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approves"} {loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
                         </div>
                         {stakedBal >0 && (
@@ -273,9 +397,9 @@ const stake = (props: Props) => {
                                 }}
                                  value={unStakeAmount} placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
                             <div className='flex items-center justify-center gap-3'>
-                                <span onClick={()=>handlePercentageOfStaked(25)} className='py-2 px-4 border border-solid border-slate-500'>25%</span>
-                                <span onClick={()=>handlePercentageOfStaked(50)} className='py-2 px-4 border border-solid border-slate-500'>50%</span>
-                                <span onClick={()=>handlePercentageOfStaked(100)} className='py-2 px-4 border border-solid border-slate-500'>100%</span>
+                                <span onClick={()=>handlePercentageOfStakedToken(25)} className='py-2 px-4 border border-solid border-slate-500'>25%</span>
+                                <span onClick={()=>handlePercentageOfStakedToken(50)} className='py-2 px-4 border border-solid border-slate-500'>50%</span>
+                                <span onClick={()=>handlePercentageOfStakedToken(100)} className='py-2 px-4 border border-solid border-slate-500'>100%</span>
                             </div>
                             {!active && (
                                 <Fragment>
@@ -287,7 +411,7 @@ const stake = (props: Props) => {
                                 <button 
                                     disabled={isApproving}
                                     onClick={Number(unStakeAmount)> 0 ? handleUnstake : ()=>console.log('handle')}
-                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Unstake</button>
+                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Unstake {loadingUnStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
 
                         </div>
@@ -296,7 +420,7 @@ const stake = (props: Props) => {
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
                         <p className='font-bold my-2'>{pendingReward} ZLT</p>
-                        <button onClick={handleHarvest} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
+                        <button onClick={handleHarvest} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest{loadingHarvestToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                     </div>
                 </div>
             </div>
@@ -320,7 +444,6 @@ const stake = (props: Props) => {
                         </div>
                         <div className='basis-3/12 grow'>
                             <button className=' bg-[#f08c00] m-auto block text-white py-2 px-1'>Get ZLT</button>
-
                         </div>
                     </div>
 
@@ -328,34 +451,52 @@ const stake = (props: Props) => {
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: 10 ZLT</span> </div>
-                            <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
+                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltNFTBal?.length}</span> </div>
                             
                             <div className='flex items-center justify-center gap-3'>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>25%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>50%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>100%</span>
+                                {zltNFTBal?.map((nft, index)=>{
+                                    return (
+
+                                        <span onClick={()=>handleSelectNFTToStake(Number(nft.toString()))} key={index} className='py-2 px-4 border border-solid border-slate-500'>{nft.toString()}</span>
+                                    )
+
+                                })}
+                               
                             </div>
-                            {active && !isApproved && (
-                                <button 
-                                    disabled={isApproving}
-                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
-                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Approve</button>
-                            )}
+
                             {!active && (
                                 <Fragment>
                                 <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
                                 <p className="text-sm text-center">Connect your wallet.</p>
                                 </Fragment>
                             )}
+
+                            {active  && (
+                            <button
+                                disabled={isApproving}
+                                onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
+                                className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
+                            )}
+
+                            {/* {active && isApproved && (
+                            <button
+                                disabled={isApproving}
+                                onClick={Number(allowance) >= Number(stakeAmount) ? handleStakeNFT : ()=>console.log("not working")}
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approves"}</button>
+                            )} */}
                         </div>
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Harvest</p>
+                            <p className='text-2xl font-semibold'>Unstake</p>
                             <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
                             <div className='flex items-center justify-center gap-3'>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>25%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>50%</span>
-                                <span className='py-2 px-4 border border-solid border-slate-500'>100%</span>
+                            {zltNFTStakedId?.map((nft, index)=>{
+                                    return (
+
+                                        <span onClick={()=>handleSelectNFTToUnStake(Number(nft.toString()))} key={index} className='py-2 px-4 border border-solid border-slate-500'>{nft.toString()}</span>
+                                    )
+
+                                })}
+                                
                             </div>
                             {active && !isApproved && (
                             <button 
@@ -363,11 +504,25 @@ const stake = (props: Props) => {
                                 onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
                              className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
                             )}
+                            {/* {!active && (
+                                <Fragment>
+                                <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
+                                <p className="text-sm text-center">Connect your wallet.</p>
+                                </Fragment>
+                            )} */}
+
                             {!active && (
                                 <Fragment>
                                 <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
                                 <p className="text-sm text-center">Connect your wallet.</p>
                                 </Fragment>
+                            )}
+
+                            {active  && (
+                            <button
+                                disabled={isApproving}
+                                onClick={!nftApproval ? handleApproveNFT : handleUnstakeNFT}
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{nftApproval ? "Stake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
                             )}
                         </div>
                     </div>

@@ -44,6 +44,14 @@ export const addresses = {
     97: "",
     56: "0x7d9127869d26090e44cCcdb8Ff246DD8Fc28b4E8",
   },
+  zltNftstaking: {
+    97: "",
+    56: "0x1fa3a6EC294E5791517E4fA208122e88164E88BE",
+  },
+  zltnft: {
+    97: "",
+    56: "0x1d1C02F9fcff7EE2073a72181caE53563C82879C",
+  },
 };
 
 export const networkList = {

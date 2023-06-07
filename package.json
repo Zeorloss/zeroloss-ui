@@ -40,6 +40,7 @@
     "react-countdown-circle-timer": "^3.0.9",
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
+    "react-loader-spinner": "^5.3.4",
     "recharts": "^2.1.16",
     "typewriter-effect": "^2.19.0"
   },
