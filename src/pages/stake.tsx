@@ -48,6 +48,7 @@ const stake = () => {
     const [isApproved, setIsApproved] = useState(false);
     const [pendingReward, setPendingReward] = useState<number>(0);
     const [loadingHarvestToken, setLoadingHarvestToken] = useState<boolean>(false);
+    const [refreshBalances, setRefreshBalances] = useState<boolean>(false);
 
     const { active, account, library } = useActiveWeb3React();
 
@@ -103,10 +104,12 @@ const stake = () => {
             return transaction.wait();
           })
         .then((ret:any) => {
-            setLoadingUnstakeNFT(false)
+            setLoadingUnstakeNFT(false);
+            setRefreshBalances(prev=>!prev);
         })
         .catch((e: any) => {
-            setLoadingUnstakeNFT(false)
+            setLoadingUnstakeNFT(false);
+            setRefreshBalances(prev=>!prev);
             console.log("error unstake: " + e?.message);
         });
     }
@@ -127,12 +130,15 @@ const stake = () => {
           })
           .then((ret:any) => {
               setStakeAmount(0)
-              console.log("withdraw: " + ret)
+              console.log("withdraw: " + ret);
+              setRefreshBalances(prev=>!prev);
+              setLoadingUnStakeToken(false);
             })
             .catch((e: any) => {
                 console.log("error unsatke: " + e?.message);
+                setRefreshBalances(prev=>!prev);
+                setLoadingUnStakeToken(false);
             });
-            setLoadingUnStakeToken(false);
         }
         
     const handleStake = ()=>{
@@ -149,26 +155,37 @@ const stake = () => {
             // Wait for the transaction to be confirmed
             return transaction.wait();
           })
-        .then(()=>{setStakeAmount(0); console.log("stakeAMount set");})
+        .then(()=>{
+            setLoadingStakeToken(false);
+            setStakeAmount(0); 
+            console.log("stakeAMount set"); 
+            setRefreshBalances(prev=>!prev);})
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
+            setRefreshBalances(prev=>!prev);
+            setLoadingStakeToken(false);
         });
-        setLoadingStakeToken(false);
     }
 
     
     const handleStakeNFT = ()=>{
         setLoadingStakeNFT(true);
+        // loadingStakeNFT
         const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
         contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.005') })
         .then((transaction:any) => {
             return transaction.wait();
           })
-        .then((r:any)=>{ console.log("stakeAMount set" + r );})
+        .then((r:any)=>{ 
+            console.log("stakeAMount set" + r );
+            setRefreshBalances(prev=>!prev);
+            setLoadingStakeNFT(false);
+    })
         .catch((e: any) => {
             console.log("error stake: " + e?.message);
+            setRefreshBalances(prev=>!prev);
+            setLoadingStakeNFT(false);
         });
-        setLoadingStakeNFT(false);
     }
 
     useEffect(()=>{
@@ -196,7 +213,7 @@ const stake = () => {
         }
 
         getStakedAmount();
-    }, [account, library, stakeAmount])
+    }, [account, library, stakeAmount, refreshBalances])
     
     // READ NFT AMOUNT STAKED
     useEffect(()=>{
@@ -211,7 +228,7 @@ const stake = () => {
         }
 
         getStakedAmount();
-    }, [account, library])
+    }, [account, library, refreshBalances])
 
     const handleHarvest = () =>{
         setLoadingHarvestToken(true);
@@ -224,8 +241,11 @@ const stake = () => {
         })
         .catch(() => {
             console.log("error");
-        });
-        setLoadingHarvestToken(false);
+        })
+        .finally(()=>{
+            setRefreshBalances(prev=>!prev);
+            setLoadingHarvestToken(false);
+        })
     }
     
     const handlePercentageOfTokenBal = (percent: number) =>{
@@ -283,7 +303,7 @@ const stake = () => {
         
 
 
-    }, [account, library]);
+    }, [account, library, refreshBalances]);
 
     useEffect(() => {
         (async () => {
@@ -345,8 +365,10 @@ const stake = () => {
                     </div>
 
                 </div>
+
                 <div className='flex flex-wrap justify-between items-center'>
                     <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
+                        {/* Staking Token */}
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                             <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal.toFixed(2)} LP</span> </div>
                             <input
@@ -373,16 +395,18 @@ const stake = () => {
                             {active && !isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={nftApproval ? handleStake : handleApprove}
+                                onClick={isApproved ? handleStake : handleApprove}
                                 className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"}{loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
                             {active && isApproved && (
                             <button
                                 disabled={isApproving}
-                                onClick={nftApproval ? handleStake : handleApprove}
+                                onClick={isApproved ? handleStake : handleApprove}
                                 className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"} {loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
                         </div>
+
+                        {/* Unstake TOken */}
                         {stakedBal >0 && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                                 <div className='text-2xl font-semibold flex justify-between items-end'><span>Unstake </span><span className='text-xs'>Staked: {stakedBal} LP</span> </div>
@@ -410,8 +434,8 @@ const stake = () => {
                             {active && isApproved && (
                                 <button 
                                     disabled={isApproving}
-                                    onClick={Number(unStakeAmount)> 0 ? handleUnstake : ()=>console.log('handle')}
-                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2  my-4'>Unstake {loadingUnStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
+                                    onClick={handleUnstake}
+                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2  my-4'>Unstake {loadingUnStakeToken ? <TailSpin width={30} height={30} color="white" /> : ""}</button>
                             )}
 
                         </div>
@@ -424,6 +448,9 @@ const stake = () => {
                     </div>
                 </div>
             </div>
+
+
+            {/* Staking NFT */}
             <div className='py-10 bg-[#323232] my-5 rounded-md shadow-lg w-11/12 m-auto'>
                 <div className='flex gap-2 items-center'>
                     <img width={100} src='/cdn/Zeroloss logo.png' alt='' />
@@ -475,7 +502,7 @@ const stake = () => {
                             <button
                                 disabled={isApproving}
                                 onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
-                                className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
+                                className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
                             )}
 
                             {/* {active && isApproved && (
@@ -485,6 +512,7 @@ const stake = () => {
                                 className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{isApproved? "Stake" : "Approves"}</button>
                             )} */}
                         </div>
+                        {zltNFTStakedId.length>0 && (
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                             <p className='text-2xl font-semibold'>Unstake</p>
                             <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
@@ -521,10 +549,11 @@ const stake = () => {
                             {active  && (
                             <button
                                 disabled={isApproving}
-                                onClick={!nftApproval ? handleApproveNFT : handleUnstakeNFT}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>{nftApproval ? "Stake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
+                                onClick={nftApproval ?  handleUnstakeNFT : handleApproveNFT}
+                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{nftApproval ? "Unstake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
                             )}
                         </div>
+                        )}
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
