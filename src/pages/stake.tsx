@@ -380,7 +380,7 @@ const stake = () => {
                             <button
                                 disabled={isApproving}
                                 onClick={nftApproval ? handleStake : handleApprove}
-                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approves"} {loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
+                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"} {loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
                         </div>
                         {stakedBal >0 && (
@@ -411,7 +411,7 @@ const stake = () => {
                                 <button 
                                     disabled={isApproving}
                                     onClick={Number(unStakeAmount)> 0 ? handleUnstake : ()=>console.log('handle')}
-                                    className='bg-[#f08c00] p-3 rounded m-auto block my-4'>Unstake {loadingUnStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
+                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2  my-4'>Unstake {loadingUnStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
 
                         </div>
