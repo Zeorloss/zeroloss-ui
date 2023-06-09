@@ -40,8 +40,13 @@ const stake = () => {
     const [fetching, setFetching] = useState(false);
     const [isApproved, setIsApproved] = useState(false);
     const [pendingReward, setPendingReward] = useState<number>(0);
+    const [pendingNFTReward, setPendingNFTReward] = useState<number>(0);
     const [loadingHarvestToken, setLoadingHarvestToken] = useState<boolean>(false);
     const [refreshBalances, setRefreshBalances] = useState<boolean>(false);
+    const [stakeErrorMessage, setStakeErrorMessage] = useState<string>('');
+    const [unstakeErrorMessage, setUnstakeErrorMessage] = useState<string>('');
+    const [stakeNFTErrorMessage, setStakeNFTErrorMessage] = useState<string>('');
+    const [unstakeNFTErrorMessage, setUnstakeNFTErrorMessage] = useState<string>('');
 
     const { active, account, library } = useActiveWeb3React();
 
@@ -103,11 +108,21 @@ const stake = () => {
         .catch((e: any) => {
             setLoadingUnstakeNFT(false);
             setRefreshBalances(prev=>!prev);
-            console.log("error unstake: " + e?.message);
+            setUnstakeNFTErrorMessage(e?.message);
+            setTimeout(()=>{
+                setUnstakeNFTErrorMessage('')
+            },2000);
         });
     }
 
     const handleUnstake = ()=>{
+        if(Number(unStakeAmount) < 0.2){
+            setUnstakeErrorMessage('Unstake amount must be greater than 0.2');
+            setTimeout(()=>{
+                setUnstakeErrorMessage('');
+            },2000)
+            return;
+        }
         setLoadingUnStakeToken(true);
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
         const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toJSON();
@@ -122,7 +137,7 @@ const stake = () => {
             return transaction.wait();
           })
           .then((ret:any) => {
-              setStakeAmount(0)
+              setUnStakeAmount(0)
               console.log("withdraw: " + ret);
               setRefreshBalances(prev=>!prev);
               setLoadingUnStakeToken(false);
@@ -131,10 +146,21 @@ const stake = () => {
                 console.log("error unsatke: " + e?.message);
                 setRefreshBalances(prev=>!prev);
                 setLoadingUnStakeToken(false);
+                setUnstakeErrorMessage(e?.message);
+                setTimeout(()=>{
+                    setUnstakeErrorMessage('')
+                },2000);
             });
         }
         
     const handleStake = ()=>{
+        if(Number(stakeAmount) < 0.1){
+            setStakeErrorMessage("Stake Amount must be greater than 0.1");
+            setTimeout(()=>{
+                setStakeErrorMessage('');
+            }, 2000)
+            return;
+        }
         setLoadingStakeToken(true);
         
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -175,14 +201,17 @@ const stake = () => {
             setLoadingStakeNFT(false);
     })
         .catch((e: any) => {
-            console.log("error stake: " + e?.message);
             setRefreshBalances(prev=>!prev);
             setLoadingStakeNFT(false);
+            setStakeNFTErrorMessage(e?.data?.message.slice(0, 30));
+            setTimeout(()=>{
+                setStakeNFTErrorMessage('')
+            },2000);
         });
     }
 
     useEffect(()=>{
-            const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
         lpContract.pendingReward(account)
         .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
@@ -214,10 +243,12 @@ const stake = () => {
             const cont = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
             const [bal, id, reward] = await cont.getUserPoolInfo(account)
             // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log(bal);
-            console.log(id);
-            console.log(reward);
+            console.log("x: " + bal);
+            console.log("y: " + id);
+            console.log("z: " + reward);
+            setPendingNFTReward(reward);
             setZltNFTStakedId(id);
+            setZltNFTToUnStakeId(id);
         }
 
         getStakedAmount();
@@ -287,13 +318,13 @@ const stake = () => {
         contractNFT.walletOfOwner(account)
         .then((p:number[]) => {
             setZltNFTBal(p);
+            handleSelectNFTToStake(p[0])
         })
         .catch(() => {
             console.log("bal erro");
             setZltNFTBal([]);
         });
 
-        
 
 
     }, [account, library, refreshBalances]);
@@ -364,6 +395,7 @@ const stake = () => {
                         {/* Staking Token */}
                         <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                             <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltBal.toFixed(2)} LP</span> </div>
+                            {stakeErrorMessage && <p className="font-bold text-sm mt-3">{stakeErrorMessage}</p>}
                             <input
                                 
                                 onChange={(e) => {
@@ -405,6 +437,8 @@ const stake = () => {
                                 <div className='text-2xl font-semibold flex justify-between items-end'><span>Unstake </span><span className='text-xs'>Staked: {stakedBal} LP</span> </div>
                             {/* <p className='text-2xl font-semibold'>Unstake</p> */}
                             {/* <p>Staked: {stakedBal}</p> */}
+                            {unstakeErrorMessage && <p className="font-bold text-sm mt-3">{unstakeErrorMessage}</p>}
+
                             <input
                                 onChange={(e) => {
                                     setUnStakeAmount(e.target.value);
@@ -455,7 +489,7 @@ const stake = () => {
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
                     <div className='text-center flex flex-wrap basis-full items-center justify-center'>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>10</span>
+                            <span>{zltNFTBal.length}</span>
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
@@ -470,79 +504,82 @@ const stake = () => {
                     </div>
 
                 </div>
-                <div className='flex flex-wrap justify-between items-center'>
-                    <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
-                        <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltNFTBal?.length}</span> </div>
-                            
-                            <div className='flex items-center justify-center gap-3'>
-                                {zltNFTBal?.map((nft, index)=>{
-                                    return (
-
-                                        <span onClick={()=>handleSelectNFTToStake(Number(nft.toString()))} key={index} className='py-2 px-4 border border-solid border-slate-500'>{nft.toString()}</span>
-                                    )
-
-                                })}
-                               
-                            </div>
-
-                            {!active && (
-                                <Fragment>
-                                <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
-                                <p className="text-sm text-center">Connect your wallet.</p>
-                                </Fragment>
-                            )}
-
-                            {active  && (
-                            <button
-                                disabled={isApproving}
-                                onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
-                                className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
-                            )}
-                        </div>
-                        {zltNFTStakedId.length>0 && (
-                        <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                            <p className='text-2xl font-semibold'>Unstake</p>
-                            <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
-                            <div className='flex items-center justify-center gap-3'>
-                            {zltNFTStakedId?.map((nft, index)=>{
-                                    return (
-
-                                        <span onClick={()=>handleSelectNFTToUnStake(Number(nft.toString()))} key={index} className='py-2 px-4 border border-solid border-slate-500'>{nft.toString()}</span>
-                                    )
-
-                                })}
+                {zltNFTBal.length>0 && (
+                    <div className='flex flex-wrap justify-between items-center'>
+                        <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
+                            <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
+                                <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltNFTBal?.length}</span> </div>
+                                {stakeNFTErrorMessage && <p className="text-sm font-bold mt-3">{stakeNFTErrorMessage} </p>}
                                 
+                                <div className='flex items-center justify-center gap-3'>
+                                    {zltNFTBal?.map((nft, index)=>{
+                                        return (
+
+                                            <span onClick={()=>handleSelectNFTToStake(Number(nft.toString()))} key={index} className={`${zltNFTToStakeId==Number(nft.toString())?"bg-white text-black ":""} py-2 px-4 border border-solid border-slate-500'`}>{nft.toString()}</span>
+                                        )
+
+                                    })}
+                                
+                                </div>
+
+                                {!active && (
+                                    <Fragment>
+                                    <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
+                                    <p className="text-sm text-center">Connect your wallet.</p>
+                                    </Fragment>
+                                )}
+
+                                {active  && (
+                                <button
+                                    disabled={isApproving}
+                                    onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
+                                    className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
+                                )}
                             </div>
-                            {active && !isApproved && (
-                            <button 
-                                disabled={isApproving}
-                                onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
-                             className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
-                            )}
+                            {zltNFTStakedId.length>0 && (
+                            <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
+                                <p className='text-2xl font-semibold'>Unstake</p>
+                                <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
+                                <div className='flex items-center justify-center gap-3'>
+                                {zltNFTStakedId?.map((nft, index)=>{
+                                        return (
 
-                            {!active && (
-                                <Fragment>
-                                <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
-                                <p className="text-sm text-center">Connect your wallet.</p>
-                                </Fragment>
-                            )}
+                                            <span onClick={()=>handleSelectNFTToUnStake(Number(nft.toString()))} key={index} className='py-2 px-4 border border-solid border-slate-500'>{nft.toString()}</span>
+                                        )
 
-                            {active  && (
-                            <button
-                                disabled={isApproving}
-                                onClick={nftApproval ?  handleUnstakeNFT : handleApproveNFT}
-                                className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{nftApproval ? "Unstake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
+                                    })}
+                                    
+                                </div>
+                                {active && !isApproved && (
+                                <button 
+                                    disabled={isApproving}
+                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
+                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
+                                )}
+
+                                {!active && (
+                                    <Fragment>
+                                    <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
+                                    <p className="text-sm text-center">Connect your wallet.</p>
+                                    </Fragment>
+                                )}
+
+                                {active  && (
+                                <button
+                                    disabled={isApproving}
+                                    onClick={nftApproval ?  handleUnstakeNFT : handleApproveNFT}
+                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{nftApproval ? "Unstake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
+                                )}
+                            </div>
                             )}
                         </div>
-                        )}
+                        <div className='basis-full text-lg lg:basis-[30%] text-center'>
+                            <p>Pending Reward</p>
+                            <p className='font-bold my-2'>{pendingNFTReward.toString()} ZLT</p>
+                            <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
+                        </div>
                     </div>
-                    <div className='basis-full text-lg lg:basis-[30%] text-center'>
-                        <p>Pending Reward</p>
-                        <p className='font-bold my-2'>1.23 ZLT</p>
-                        <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     </Layout>
