@@ -97,6 +97,7 @@ const stake = () => {
     const handleUnstakeNFT = ()=>{
         setLoadingUnstakeNFT(true)
         const contract = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
+        console.log(zltNFTToUnStakeId);
         contract.unstake(zltNFTToUnStakeId)
         .then((transaction:any) => {
             return transaction.wait();
@@ -203,7 +204,7 @@ const stake = () => {
         .catch((e: any) => {
             setRefreshBalances(prev=>!prev);
             setLoadingStakeNFT(false);
-            setStakeNFTErrorMessage(e?.data?.message.slice(0, 30));
+            setStakeNFTErrorMessage("Error Occurred");
             setTimeout(()=>{
                 setStakeNFTErrorMessage('')
             },2000);
@@ -248,7 +249,7 @@ const stake = () => {
             console.log("z: " + reward);
             setPendingNFTReward(reward);
             setZltNFTStakedId(id);
-            setZltNFTToUnStakeId(id);
+            handleSelectNFTToUnStake(id[0]);
         }
 
         getStakedAmount();
@@ -504,10 +505,11 @@ const stake = () => {
                     </div>
 
                 </div>
-                {zltNFTBal.length>0 && (
                     <div className='flex flex-wrap justify-between items-center'>
                         <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
+                {true && (
+                    <>
                                 <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltNFTBal?.length}</span> </div>
                                 {stakeNFTErrorMessage && <p className="text-sm font-bold mt-3">{stakeNFTErrorMessage} </p>}
                                 
@@ -531,15 +533,21 @@ const stake = () => {
 
                                 {active  && (
                                 <button
-                                    disabled={isApproving}
-                                    onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
-                                    className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
+                                disabled={isApproving}
+                                onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
+                                className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
                                 )}
+                            </>
+                            )}
+                                    
                             </div>
+                            
                             {zltNFTStakedId.length>0 && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                                 <p className='text-2xl font-semibold'>Unstake</p>
-                                <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' />
+                            {unstakeNFTErrorMessage && <p className="font-bold text-sm mt-3">{unstakeNFTErrorMessage}</p>}
+
+                                {/* <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' /> */}
                                 <div className='flex items-center justify-center gap-3'>
                                 {zltNFTStakedId?.map((nft, index)=>{
                                         return (
@@ -557,18 +565,13 @@ const stake = () => {
                                 className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
                                 )}
 
-                                {!active && (
-                                    <Fragment>
-                                    <ConnectWalletButton className="hover:bg-white bg-[#f08c00] my-3" />
-                                    <p className="text-sm text-center">Connect your wallet.</p>
-                                    </Fragment>
-                                )}
+                                
 
                                 {active  && (
                                 <button
                                     disabled={isApproving}
-                                    onClick={nftApproval ?  handleUnstakeNFT : handleApproveNFT}
-                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{nftApproval ? "Unstake" : "Approve"} {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
+                                    onClick={handleUnstakeNFT}
+                                    className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>UnStake {loadingUnstakeNFT? <TailSpin width={30} height={30} color='white' /> : ''}</button>
                                 )}
                             </div>
                             )}
@@ -579,7 +582,7 @@ const stake = () => {
                             <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                         </div>
                     </div>
-                )}
+                
             </div>
         </div>
     </Layout>
