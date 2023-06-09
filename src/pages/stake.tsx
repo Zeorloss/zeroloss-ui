@@ -86,9 +86,11 @@ const stake = () => {
             .then((response:any)=>{
                 console.log('approving smart contract:' + response);
                 setLoadingApproveNFT(false);
+                refresh(prev=>!prev)
             })
             
         } catch (error) {
+            refresh(prev=>!prev)
             setLoadingApproveNFT(false);
             console.error('Error approving smart contract:', error);
         }
