@@ -120,10 +120,6 @@ const stake = () => {
         .catch((e: any) => {
             setLoadingUnstakeNFT(false);
             setRefreshBalances(prev=>!prev);
-            setUnstakeNFTErrorMessage(e?.message);
-            setTimeout(()=>{
-                setUnstakeNFTErrorMessage('')
-            },2000);
         });
     }
 
@@ -519,7 +515,8 @@ const stake = () => {
                 </div>
                     <div className='flex flex-wrap justify-between items-center'>
                         <div className='basis-full p-2 text-xl lg:basis-[60%] flex flex-wrap justify-center items-center gap-2'>
-                            <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
+                        {zltNFTStakedId.length<1 && 
+                        (<div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
                 {true && (
                     <>
                                 <div className='text-2xl font-semibold flex justify-between items-end'><span>Stake</span><span className='text-xs'>Balance: {zltNFTBal?.length}</span> </div>
@@ -555,10 +552,11 @@ const stake = () => {
                             )}
                                     
                             </div>
+                            )}
                             
                             {zltNFTStakedId.length>0 && (
                             <div className='basis-full sm:basis-5/12 max-w-[330px] bg-[#3e3d3d] p-2 m-auto my-4'>
-                                <p className='text-2xl font-semibold'>Unstake</p>
+                                <p className='text-2xl text-center my-2 font-semibold'>Unstake</p>
                             {unstakeNFTErrorMessage && <p className="font-bold text-sm mt-3">{unstakeNFTErrorMessage}</p>}
 
                                 {/* <input placeholder='0' className='w-full bg-[#393939] p-2 my-4' type='number' /> */}
