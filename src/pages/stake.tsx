@@ -44,6 +44,7 @@ const stake = () => {
     const [loadingHarvestToken, setLoadingHarvestToken] = useState<boolean>(false);
     const [refreshBalances, setRefreshBalances] = useState<boolean>(false);
     const [stakeErrorMessage, setStakeErrorMessage] = useState<string>('');
+    const [approveErrorMessage, setApproveErrorMessage] = useState<string>('');
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState<string>('');
     const [stakeNFTErrorMessage, setStakeNFTErrorMessage] = useState<string>('');
     const [unstakeNFTErrorMessage, setUnstakeNFTErrorMessage] = useState<string>('');
@@ -76,6 +77,14 @@ const stake = () => {
 
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
+        if(zltNFTToStakeId == 0){
+            setLoadingApproveNFT(false);
+            setApproveErrorMessage("Select an NFT ID to approve!")
+            setTimeout(()=>{
+                setApproveErrorMessage("")
+            }, 2000);
+            return 
+        }
         try{
             const contractNFT = getContract(zltNftAbi, getAddress(addresses.zltnft), library?.getSigner());
             await contractNFT.approve(addresses.zltNftstaking[56], zltNFTToStakeId)
@@ -192,6 +201,7 @@ const stake = () => {
     
     const handleStakeNFT = ()=>{
         setLoadingStakeNFT(true);
+        console.log(zltNFTToStakeId);
         // loadingStakeNFT
         const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
         contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.005') })
@@ -539,6 +549,8 @@ const stake = () => {
                                 onClick={nftApproval ? handleStakeNFT: handleApproveNFT }
                                 className='bg-[#f08c00] p-3 rounded m-auto  my-3 flex items-center gap-2 '>{nftApproval? "Stake" : "Approve"} {loadingApproveNFT? <TailSpin width={30} height={30} color='white' /> : ""} {loadingStakeNFT ? <TailSpin width={30} height={30} color='white' /> : '' }</button>
                                 )}
+
+                                {approveErrorMessage && (<p className="text-sm font-bold">Select an NFT ID to approve</p>)}
                             </>
                             )}
                                     
