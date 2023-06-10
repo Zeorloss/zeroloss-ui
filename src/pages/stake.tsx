@@ -219,19 +219,19 @@ const stake = () => {
         });
     }
 
-    useEffect(()=>{
-        const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-        lpContract.pendingReward(account)
-        .then((p: ethers.BigNumber) => {
-        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-        console.log("pending reward: " + bal);
-        })
-        .catch((e: any) => {
-        console.log("error" + e?.message);
-        });
+    // useEffect(()=>{
+    //     const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+    //     lpContract.pendingReward(account)
+    //     .then((p: ethers.BigNumber) => {
+    //     const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+    //     console.log("pending reward: " + bal);
+    //     })
+    //     .catch((e: any) => {
+    //     console.log("error" + e?.message);
+    //     });
 
         
-    }, [account, refreshBalances])
+    // }, [account, refreshBalances])
 
     // read amount staked
     useEffect(()=>{
@@ -570,15 +570,7 @@ const stake = () => {
                                     })}
                                     
                                 </div>
-                                {active && !isApproved && (
-                                <button 
-                                    disabled={isApproving}
-                                    onClick={Number(allowance) >= Number(stakeAmount) ? ()=>console.log("done") : handleApprove}
-                                className='bg-[#f08c00] p-3 rounded m-auto block my-3'>Approve</button>
-                                )}
-
                                 
-
                                 {active  && (
                                 <button
                                     disabled={isApproving}
