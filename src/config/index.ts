@@ -24,6 +24,10 @@ export const addresses = {
     56: "0x05D8762946fA7620b263E1e77003927addf5f7E6",
     97: ""
   },
+  krlBNBLP: {
+    56: "0xAb168a06623eDe1b6b590733952cca4d7123f1F5",
+    97: ""
+  },
   cfycSale: {
     56: "0xa600214DeD3243C810e15Bbc484C98D02A7b66ea",
     97: ""

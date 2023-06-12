@@ -15,8 +15,12 @@ import { BIG_TEN } from '../utils/bignumber';
 import BigNumber from "bignumber.js";
 import { MaxUint256 } from "@ethersproject/constants";
 import { TailSpin } from 'react-loader-spinner';
+import useCalculateAPR from '../hooks/useCalculateAPR';
 
 const stake = () => {
+
+    const {getLPPriceUSD, getZLTPriceUSD, getBNBPriceUSD} = useCalculateAPR();
+    
     const [zltBal, setZltBal] = useState<number>(0);
     const [loadingApproveNFT, setLoadingApproveNFT] = useState<boolean>(false);
     const [loadingApproveToken, setLoadingApproveToken] = useState<boolean>(false);
@@ -48,9 +52,9 @@ const stake = () => {
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState<string>('');
     const [stakeNFTErrorMessage, setStakeNFTErrorMessage] = useState<string>('');
     const [unstakeNFTErrorMessage, setUnstakeNFTErrorMessage] = useState<string>('');
+    const [APR, setAPR] = useState<number>(0);
 
     const { active, account, library } = useActiveWeb3React();
-
 
     const { onApprove } = useApproveToken(
         getKRLZLTContract(library?.getSigner()),
@@ -79,41 +83,69 @@ const stake = () => {
     }
     // }, [onApprove, account, library]);
 
-    // useEffect(()=>{
-    //     handleApprove();
+    useEffect(()=>{
 
-    //     if(account && library){
-    //     }
+        async function calculateAPR(){
+            const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
+            
 
-    // }, [account, library])
+            const RPB = await lpContract.rewardPerBlock();
+            const ar = new BigNumber(RPB._hex).toNumber();// amount of BNB in the LP CA
+            if(ar > 0 ){
+                const AR  = ar * 10512000; 
+                const pRT = await getZLTPriceUSD();
+                const VAR = pRT * AR;
+                const ts = await lpContract.totalStaked();
 
-    // useEffect(() => {
-    //     (async () => {
-    //       // setRequesting(true);
-    //       if (account && library) {
-    //         const krlzltContract = getContract(erc20, addresses.krlzlt[56], library?.getSigner());
-    //         krlzltContract
-    //           .allowance(account, getKrlZltLPAddress())
-    //           .then(({ _hex }: any) => {
-    //             if (MaxUint256.eq(_hex)) {
-    //                 console.log("good");
-    //                 // setIsApproved(true);
-    //             } else {
-    //                 console.log("bad");
-    //             //   setIsApproved(false);
-    //             }
-    //             // return MaxUint256.eq(_hex); // return promise for finally to run
-    //           })
-    //           .finally(() => {
-    //             // setRequesting(false);
-    //           });
-    //       } else {
-    //         // setIsApproved(false);
-    //         // setIsRequesting(false);
-    //       }
-    //     })();
-    // //   }, [account, library, isApproved]);
-    //   }, [account, library, isApproved, refreshBalances]);
+                if(ts > 0 ){
+                    const pst = await getLPPriceUSD();
+                    const tsv = ts * pst;
+                    const APR = VAR / tsv * 100; 
+                    setAPR(APR);
+                    console.log(APR);
+                } else{
+                    console.log(ts);
+
+                }
+            }else{
+                console.log(ar);
+            }
+
+
+        }
+        calculateAPR();
+
+    }, []);
+
+
+
+    useEffect(() => {
+        (async () => {
+          // setRequesting(true);
+          if (account && library) {
+            const krlzltContract = getContract(erc20, addresses.krlzlt[56], library?.getSigner());
+            krlzltContract
+              .allowance(account, getKrlZltLPAddress())
+              .then(({ _hex }: any) => {
+                if (MaxUint256.eq(_hex)) {
+                    console.log("good");
+                    // setIsApproved(true);
+                } else {
+                    console.log("bad");
+                //   setIsApproved(false);
+                }
+                // return MaxUint256.eq(_hex); // return promise for finally to run
+              })
+              .finally(() => {
+                // setRequesting(false);
+              });
+          } else {
+            // setIsApproved(false);
+            // setIsRequesting(false);
+          }
+        })();
+    //   }, [account, library, isApproved]);
+      }, [account, library, isApproved, refreshBalances]);
 
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
@@ -385,7 +417,7 @@ const stake = () => {
 
 
     // }, [account, library]);
-    }, [account, library]);
+    }, [account, library, refreshBalances]);
 
     //fetch NFT IN user account
     useEffect(()=>{
@@ -434,8 +466,8 @@ const stake = () => {
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>21 %</span>
-                            <p className='text-base font-bold'>APY</p>
+                            <span>{APR}%</span>
+                            <p className='text-base font-bold'>APR</p>
                         </div>
                         <div className='my-4 grow basis-3/12 md:basis-3/12'>
                         <a href="https://pancakeswap.finance/add/0xF1288cF18B1FAaA35F40111c3E5d2f827e1E920E/0x05D8762946fA7620b263E1e77003927addf5f7E6">
