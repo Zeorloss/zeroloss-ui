@@ -75,6 +75,33 @@ const stake = () => {
         }
     }, [onApprove, account, library]);
 
+    useEffect(() => {
+        (async () => {
+          // setRequesting(true);
+          if (account && library) {
+            const krlzltContract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner());
+            krlzltContract
+              .allowance(account, getKrlZltLPAddress())
+              .then(({ _hex }: any) => {
+                if (MaxUint256.eq(_hex)) {
+                    console.log("good");
+                    setIsApproved(true);
+                } else {
+                    console.log("bad");
+                  setIsApproved(false);
+                }
+                return MaxUint256.eq(_hex); // return promise for finally to run
+              })
+              .finally(() => {
+                // setRequesting(false);
+              });
+          } else {
+            setIsApproved(false);
+            // setIsRequesting(false);
+          }
+        })();
+      }, [account, library, isApproved]);
+
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
         if(zltNFTToStakeId == 0){
@@ -261,8 +288,9 @@ const stake = () => {
         }
 
         getStakedAmount();
-    }, [account, library, refreshBalances])
+    }, [account, library, refreshBalances]);
 
+    
     const handleHarvest = () =>{
         setLoadingHarvestToken(true);
         const lpContract = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
@@ -311,6 +339,8 @@ const stake = () => {
     const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
+        console.log(account)
+        console.log("acct: " + account)
         const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
         contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
@@ -323,6 +353,13 @@ const stake = () => {
         setZltBal(0);
         });
         
+        
+
+
+
+    }, [account, library, refreshBalances]);
+
+    useEffect(()=>{
         const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner())
         contractNFT.walletOfOwner(account)
         .then((p:number[]) => {
@@ -333,37 +370,9 @@ const stake = () => {
             console.log("bal erro");
             setZltNFTBal([]);
         });
+    }, [account, library, refreshBalances])
 
-
-
-    }, [account, library, refreshBalances]);
-
-    useEffect(() => {
-        (async () => {
-          // setRequesting(true);
-          if (account && library) {
-            const krlzltContract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner());
-            krlzltContract
-              .allowance(account, getKrlZltLPAddress())
-              .then(({ _hex }: any) => {
-                if (MaxUint256.eq(_hex)) {
-                    console.log("good");
-                    setIsApproved(true);
-                } else {
-                    console.log("bad");
-                  setIsApproved(false);
-                }
-                return MaxUint256.eq(_hex); // return promise for finally to run
-              })
-              .finally(() => {
-                // setRequesting(false);
-              });
-          } else {
-            setIsApproved(false);
-            // setIsRequesting(false);
-          }
-        })();
-      }, [account, library, isApproved]);
+    
 
   return (
     <Layout>

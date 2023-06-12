@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
 import BigNumber from "bignumber.js";
-import { isAddress } from "ethers/lib/utils";
+// import { isAddress } from "ethers/lib/utils";
 import { addresses, networkList } from "../config";
 import useQuery from "../hooks";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
@@ -89,13 +89,13 @@ export default function AppContext({ children }: { children: React.ReactNode }) 
     }
   }, [active, error]);
 
-  useEffect(() => {
-    if (account && refFromParams !== null && isAddress(refFromParams)) {
-      setRefAddress(refFromParams);
-    } else if (account) {
-      setRefAddress(account);
-    }
-  }, [account, refFromParams]);
+  // useEffect(() => {
+  //   if (account && refFromParams !== null && isAddress(refFromParams)) {
+  //     setRefAddress(refFromParams);
+  //   } else if (account) {
+  //     setRefAddress(account);
+  //   }
+  // }, [account, refFromParams]);
 
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
