@@ -369,6 +369,7 @@ const stake = () => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
             console.log("balances: " + bal );
             setZltBal(bal);
+            return;
         })
         .catch(() => {
             console.log("bal erro");
@@ -394,7 +395,8 @@ const stake = () => {
         .then((p:number[]) => {
             setZltNFTBal(p);
             console.log("NFT fetch success");
-            handleSelectNFTToStake(p[0])
+            handleSelectNFTToStake(p[0]);
+            return;
         })
         .catch(() => {
             console.log("NFT fetch erro");
