@@ -100,8 +100,8 @@ const stake = () => {
             // setIsRequesting(false);
           }
         })();
-      }, [account, library, isApproved]);
-    //   }, [account, library, isApproved, refreshBalances]);
+    //   }, [account, library, isApproved]);
+      }, [account, library, isApproved, refreshBalances]);
 
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
@@ -274,8 +274,8 @@ const stake = () => {
     
             getStakedAmount();
         }
-    }, [account, library, stakeAmount])
-    // }, [account, library, stakeAmount, refreshBalances])
+    // }, [account, library, stakeAmount])
+    }, [account, library, stakeAmount, refreshBalances])
     
     // READ NFT AMOUNT STAKED
     useEffect(()=>{
@@ -294,8 +294,8 @@ const stake = () => {
     
             getStakedAmount();
         }
-    }, [account, library]);
-    // }, [account, library, refreshBalances]);
+    // }, [account, library]);
+    }, [account, library, refreshBalances]);
 
     
     const handleHarvest = () =>{
@@ -346,7 +346,7 @@ const stake = () => {
     const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
-        console.log(library);
+        // console.log(library);
        if(account && library){
         const handleGetBal = async ()=>{
             console.log(account)
@@ -371,8 +371,8 @@ const stake = () => {
 
 
 
+    // }, [account, library]);
     }, [account, library]);
-    // }, [account, library, refreshBalances]);
 
     useEffect(()=>{
        if(account && library){
@@ -387,8 +387,8 @@ const stake = () => {
             setZltNFTBal([]);
         });
        }
-    }, [account, library])
-    // }, [account, library, refreshBalances])
+    // }, [account, library])
+    }, [account, library, refreshBalances])
 
     
 
