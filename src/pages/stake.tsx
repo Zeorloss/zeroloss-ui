@@ -389,22 +389,25 @@ const stake = () => {
 
     //fetch NFT IN user account
     useEffect(()=>{
-       if(account && library){
-        const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner())
-        contractNFT.walletOfOwner(account)
-        .then((p:number[]) => {
-            setZltNFTBal(p);
-            console.log("NFT fetch success");
-            handleSelectNFTToStake(p[0]);
-            return;
-        })
-        .catch(() => {
-            console.log("NFT fetch erro");
-            setZltNFTBal([]);
-        });
-       }
-    // }, [account, library])
-    }, [account, library, refreshBalances])
+        if(account && library){
+            const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library.getSigner());
+            
+            contractNFT.walletOfOwner(account)
+            .then((ownedNfts:number[]) => {
+                setZltNFTBal(ownedNfts);
+                console.log("NFT fetch success");
+                if (ownedNfts.length > 0) {
+                    handleSelectNFTToStake(ownedNfts[0]);
+                }
+                return;
+            })
+            
+            .catch((error:any) => {
+                console.error("NFT fetch error: ", error);
+                setZltNFTBal([]);
+            });
+        }
+    }, [account, library, refreshBalances]);
 
     
 
