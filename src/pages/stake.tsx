@@ -393,10 +393,11 @@ const stake = () => {
         contractNFT.walletOfOwner(account)
         .then((p:number[]) => {
             setZltNFTBal(p);
+            console.log("NFT fetch success");
             handleSelectNFTToStake(p[0])
         })
         .catch(() => {
-            console.log("bal erro");
+            console.log("NFT fetch erro");
             setZltNFTBal([]);
         });
        }
