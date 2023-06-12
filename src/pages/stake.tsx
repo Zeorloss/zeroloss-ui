@@ -101,6 +101,7 @@ const stake = () => {
           }
         })();
       }, [account, library, isApproved]);
+    //   }, [account, library, isApproved, refreshBalances]);
 
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
@@ -262,33 +263,39 @@ const stake = () => {
 
     // read amount staked
     useEffect(()=>{
-        const getStakedAmount = async()=>{
-            const cont = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
-            const [p, a] = await cont.userInfo(account)
-            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log(bal);
-            setStakedBal(bal);
+        if(account && library){
+            const getStakedAmount = async()=>{
+                const cont = getContract(zltkrllp, getAddress(addresses.zltkrlstakinglp), library?.getSigner());
+                const [p, a] = await cont.userInfo(account)
+                const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+                console.log(bal);
+                setStakedBal(bal);
+            }
+    
+            getStakedAmount();
         }
-
-        getStakedAmount();
-    }, [account, library, stakeAmount, refreshBalances])
+    }, [account, library, stakeAmount])
+    // }, [account, library, stakeAmount, refreshBalances])
     
     // READ NFT AMOUNT STAKED
     useEffect(()=>{
-        const getStakedAmount = async()=>{
-            const cont = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
-            const [bal, id, reward] = await cont.getUserPoolInfo(account)
-            // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("x: " + bal);
-            console.log("y: " + id);
-            console.log("z: " + reward);
-            setPendingNFTReward(reward);
-            setZltNFTStakedId(id);
-            handleSelectNFTToUnStake(id[0]);
+        if(account && library){
+            const getStakedAmount = async()=>{
+                const cont = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner());
+                const [bal, id, reward] = await cont.getUserPoolInfo(account)
+                // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+                console.log("x: " + bal);
+                console.log("y: " + id);
+                console.log("z: " + reward);
+                setPendingNFTReward(reward);
+                setZltNFTStakedId(id);
+                handleSelectNFTToUnStake(id[0]);
+            }
+    
+            getStakedAmount();
         }
-
-        getStakedAmount();
-    }, [account, library, refreshBalances]);
+    }, [account, library]);
+    // }, [account, library, refreshBalances]);
 
     
     const handleHarvest = () =>{
@@ -339,6 +346,7 @@ const stake = () => {
     const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
+       if(account && library){
         console.log(account)
         console.log("acct: " + account)
         const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
@@ -352,14 +360,17 @@ const stake = () => {
             console.log("bal erro");
         setZltBal(0);
         });
+       }
         
         
 
 
 
-    }, [account, library, refreshBalances]);
+    }, [account, library]);
+    // }, [account, library, refreshBalances]);
 
     useEffect(()=>{
+       if(account && library){
         const contractNFT = getContract(zltNftPool, getAddress(addresses.zltNftstaking), library?.getSigner())
         contractNFT.walletOfOwner(account)
         .then((p:number[]) => {
@@ -370,7 +381,9 @@ const stake = () => {
             console.log("bal erro");
             setZltNFTBal([]);
         });
-    }, [account, library, refreshBalances])
+       }
+    }, [account, library])
+    // }, [account, library, refreshBalances])
 
     
 
