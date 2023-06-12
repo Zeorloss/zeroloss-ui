@@ -346,11 +346,13 @@ const stake = () => {
     const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
+        console.log(library);
        if(account && library){
-        console.log(account)
+        const handleGetBal = async ()=>{
+            console.log(account)
         console.log("acct: " + account)
         const contract = getContract(erc20, getAddress(addresses.krlzlt), library?.getSigner())
-        contract.balanceOf(account)
+         await contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
             console.log("balances: " + bal );
@@ -360,6 +362,9 @@ const stake = () => {
             console.log("bal erro");
         setZltBal(0);
         });
+        }
+
+        handleGetBal();
        }
         
         
