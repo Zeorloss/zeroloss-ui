@@ -57,51 +57,63 @@ const stake = () => {
         getKrlZltLPAddress()
       );
 
-    const handleApprove = useCallback(async () => {
+    const handleApprove = async () => {
         if (account && library) {
             setFetching(true);
             setLoadingApproveToken(true)
             try {
                 await onApprove();
                 setIsApproved(true);
+                console.log("handleapprove success");
+                return;
             } catch (e) {
                 console.error(e);
+                console.log("handleapprove failed");
                 setIsApproved(false);
             } finally {
                 setFetching(false);
                 setLoadingApproveToken(false);
-
+                console.log("handleapprove finally ");
             }
         }
-    }, [onApprove, account, library]);
+    }
+    // }, [onApprove, account, library]);
 
-    useEffect(() => {
-        (async () => {
-          // setRequesting(true);
-          if (account && library) {
-            const krlzltContract = getContract(erc20, addresses.krlzlt[56], library?.getSigner());
-            krlzltContract
-              .allowance(account, getKrlZltLPAddress())
-              .then(({ _hex }: any) => {
-                if (MaxUint256.eq(_hex)) {
-                    console.log("good");
-                    setIsApproved(true);
-                } else {
-                    console.log("bad");
-                  setIsApproved(false);
-                }
-                // return MaxUint256.eq(_hex); // return promise for finally to run
-              })
-              .finally(() => {
-                // setRequesting(false);
-              });
-          } else {
-            setIsApproved(false);
-            // setIsRequesting(false);
-          }
-        })();
-    //   }, [account, library, isApproved]);
-      }, [account, library, isApproved, refreshBalances]);
+    // useEffect(()=>{
+    //     handleApprove();
+
+    //     if(account && library){
+    //     }
+
+    // }, [account, library])
+
+    // useEffect(() => {
+    //     (async () => {
+    //       // setRequesting(true);
+    //       if (account && library) {
+    //         const krlzltContract = getContract(erc20, addresses.krlzlt[56], library?.getSigner());
+    //         krlzltContract
+    //           .allowance(account, getKrlZltLPAddress())
+    //           .then(({ _hex }: any) => {
+    //             if (MaxUint256.eq(_hex)) {
+    //                 console.log("good");
+    //                 // setIsApproved(true);
+    //             } else {
+    //                 console.log("bad");
+    //             //   setIsApproved(false);
+    //             }
+    //             // return MaxUint256.eq(_hex); // return promise for finally to run
+    //           })
+    //           .finally(() => {
+    //             // setRequesting(false);
+    //           });
+    //       } else {
+    //         // setIsApproved(false);
+    //         // setIsRequesting(false);
+    //       }
+    //     })();
+    // //   }, [account, library, isApproved]);
+    //   }, [account, library, isApproved, refreshBalances]);
 
     const handleApproveNFT = async() =>{
         setLoadingApproveNFT(true);
@@ -124,7 +136,6 @@ const stake = () => {
                 console.log('approving smart contract:' + response);
                 setLoadingApproveNFT(false);
                 setRefreshBalances(prev=>!prev);
-                handleSelectNFTToStake(zltNFTToStakeId);
             })
             
         } catch (error) {
@@ -375,13 +386,14 @@ const stake = () => {
     // }, [account, library]);
     }, [account, library]);
 
+    //fetch NFT IN user account
     useEffect(()=>{
        if(account && library){
         const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner())
         contractNFT.walletOfOwner(account)
         .then((p:number[]) => {
             setZltNFTBal(p);
-            // handleSelectNFTToStake(p[0])
+            handleSelectNFTToStake(p[0])
         })
         .catch(() => {
             console.log("bal erro");
@@ -420,7 +432,9 @@ const stake = () => {
                             <p className='text-base font-bold'>APY</p>
                         </div>
                         <div className='my-4 grow basis-3/12 md:basis-3/12'>
-                            <button className=' bg-[#f08c00] m-auto block text-white py-2 px-1'>Get ZLT</button>
+                        <a href="https://pancakeswap.finance/add/0xF1288cF18B1FAaA35F40111c3E5d2f827e1E920E/0x05D8762946fA7620b263E1e77003927addf5f7E6">
+                            <button className=' bg-[#f08c00] m-auto block text-white py-2 px-1'>Get LP</button>
+                        </a>
 
                         </div>
                     </div>
@@ -454,18 +468,18 @@ const stake = () => {
                                 <p className="text-sm text-center">Connect your wallet.</p>
                                 </Fragment>
                             )}
-                            {active && !isApproved && (
+                            {active && (
                             <button
                                 disabled={isApproving}
                                 onClick={isApproved ? handleStake : handleApprove}
                                 className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"}{loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                             )}
-                            {active && isApproved && (
+                            {/* {active && isApproved && (
                             <button
                                 disabled={isApproving}
                                 onClick={isApproved ? handleStake : handleApprove}
                                 className='bg-[#f08c00] p-3 rounded m-auto flex items-center gap-2 my-3'>{isApproved? "Stake" : "Approve"} {loadingApproveToken ? <TailSpin width={30} height={30} color="white" /> : loadingStakeToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
-                            )}
+                            )} */}
                         </div>
 
                         {/* Unstake TOken */}
@@ -534,9 +548,10 @@ const stake = () => {
                             <p className='text-base font-bold'>APY</p>
                         </div>
                         <div className='basis-3/12 grow'>
-                            <a href="https://pancakeswap.finance/add/0xF1288cF18B1FAaA35F40111c3E5d2f827e1E920E/0x05D8762946fA7620b263E1e77003927addf5f7E6">
-                                <button className=' bg-[#f08c00] m-auto block text-white py-2 px-1'>Get ZLT</button>
+                            <a href="https://galxe.com/Zeroloss/campaign/GCcfGUwa6P">
+                                <button className=' bg-[#f08c00] m-auto block text-white py-2 px-1'>Get NFT</button>
                             </a>
+
                         </div>
                     </div>
 
