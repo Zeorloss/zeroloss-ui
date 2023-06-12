@@ -4,7 +4,7 @@ import { BigNumber as BigNumberEth, ethers } from 'ethers';
 import useApproveToken from '../hooks/useApproveToken';
 import { getContract, getKRLZLTContract, } from '../utils/contractHelpers';
 import useActiveWeb3React from '../hooks/useActiveWeb3React';
-import { getAddress, getKrlZltLPAddress } from '../utils/addressHelpers';
+import { getKrlZltLPAddress } from '../utils/addressHelpers';
 import ConnectWalletButton from '../components/Buttons/ConnectWalletButton';
 import erc20 from "../config/abi/erc20.json";
 import zltNftPool from "../config/abi/ZerolossNftPoolABI.json";

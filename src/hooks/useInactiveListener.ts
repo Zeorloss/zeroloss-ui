@@ -4,12 +4,12 @@ import useActiveWeb3React from "./useActiveWeb3React";
 import useAuth from "./useAuth";
 
 export function useInactiveListener(suppress = false) {
-  const { active, error } = useActiveWeb3React();
+  const { active } = useActiveWeb3React();
   const { login } = useAuth();
 
   useEffect(() => {
     const { ethereum } = window;
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
+    if (ethereum && ethereum.on && !active && !suppress) {
       const handleChainChanged = (chainId: string | number) => {
         if (process.env.NODE_ENV === "development") {
           console.log("chainChanged", chainId);
@@ -47,5 +47,5 @@ export function useInactiveListener(suppress = false) {
     }
 
     return () => {};
-  }, [active, error, suppress, login]);
+  }, [active, suppress, login]);
 }
