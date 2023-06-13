@@ -19,7 +19,7 @@ import useCalculateAPR from '../hooks/useCalculateAPR';
 
 const stake = () => {
 
-    const {getLPPriceUSD, getZLTPriceUSD, getBNBPriceUSD} = useCalculateAPR();
+    const {getLPPriceUSD, getZLTPriceUSD} = useCalculateAPR();
     
     const [zltBal, setZltBal] = useState<number>(0);
     const [loadingApproveNFT, setLoadingApproveNFT] = useState<boolean>(false);
@@ -86,6 +86,7 @@ const stake = () => {
     useEffect(()=>{
 
         async function calculateAPR(){
+            console.log("APY")
             const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
             
 
