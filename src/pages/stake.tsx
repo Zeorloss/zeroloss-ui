@@ -296,16 +296,16 @@ const stake = () => {
 
     useEffect(()=>{
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        lpContract.pendingReward(account)
+        lpContract.pendingReward("0x9B71B4Dc9E9DCeFAF0e291Cf2DC5135A862A463d")
         .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
         console.log("pending reward: " + bal);
+        setPendingReward(bal);
         })
         .catch((e: any) => {
         console.log("error" + e?.message);
         });
 
-        
     }, [account, refreshBalances])
 
     // read amount staked
@@ -318,10 +318,8 @@ const stake = () => {
                 console.log(bal);
                 setStakedBal(bal);
             }
-    
             getStakedAmount();
         }
-    // }, [account, library, stakeAmount])
     }, [account, library, stakeAmount, refreshBalances])
     
     // READ NFT AMOUNT STAKED
@@ -330,7 +328,7 @@ const stake = () => {
             const getStakedAmount = async()=>{
                 const cont = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
                 const [bal, id, reward] = await cont.getUserPoolInfo(account)
-                // const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+                
                 console.log("x: " + bal);
                 console.log("y: " + id);
                 console.log("z: " + reward);
@@ -341,7 +339,7 @@ const stake = () => {
     
             getStakedAmount();
         }
-    // }, [account, library]);
+    // }, [account, library]); ,.
     }, [account, library, refreshBalances]);
 
     
@@ -360,7 +358,7 @@ const stake = () => {
         .finally(()=>{
             setRefreshBalances(prev=>!prev);
             setLoadingHarvestToken(false);
-        })
+        });
     }
     
     const handlePercentageOfTokenBal = (percent: number) =>{
@@ -469,7 +467,7 @@ const stake = () => {
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>{APR}%</span>
+                            <span>{APR.toFixed(2)}%</span>
                             <p className='text-base font-bold'>APR</p>
                         </div>
                         <div className='my-4 grow basis-3/12 md:basis-3/12'>
@@ -562,7 +560,7 @@ const stake = () => {
                     </div>
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
-                        <p className='font-bold my-2'>{pendingReward} ZLT</p>
+                        <p className='font-bold my-2'>{pendingReward.toFixed(2)} ZLT</p>
                         <button onClick={handleHarvest} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest{loadingHarvestToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
                     </div>
                 </div>
