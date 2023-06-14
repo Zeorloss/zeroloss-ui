@@ -19,7 +19,7 @@ import { BIG_TEN } from "../utils/bignumber";
     }
         
     async function getLPPriceUSD(){
-      const {library} = useActiveWeb3React();
+      // const {library} = useActiveWeb3React();
       const lpContract = getContract(pancakePairAbi, addresses.krlBNBLP[56], library?.getSigner());
       const [x, y, _temp] = await lpContract.getReserves();
       const reserve1 = new BigNumber(y._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA

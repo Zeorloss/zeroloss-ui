@@ -130,18 +130,18 @@ const stake = () => {
               .then(({ _hex }: any) => {
                 if (MaxUint256.eq(_hex)) {
                     console.log("good");
-                    // setIsApproved(true);
+                    setIsApproved(true);
                 } else {
                     console.log("bad");
-                //   setIsApproved(false);
+                  setIsApproved(false);
                 }
-                // return MaxUint256.eq(_hex); // return promise for finally to run
+                return MaxUint256.eq(_hex); // return promise for finally to run
               })
               .finally(() => {
                 // setRequesting(false);
               });
           } else {
-            // setIsApproved(false);
+            setIsApproved(false);
             // setIsRequesting(false);
           }
         })();
@@ -197,8 +197,9 @@ const stake = () => {
     }
 
     const handleUnstake = ()=>{
-        if(Number(unStakeAmount) < 0.2){
-            setUnstakeErrorMessage('Unstake amount must be greater than 0.2');
+        const MIN_UNSTAKE = 0.1;
+        if(Number(unStakeAmount) < MIN_UNSTAKE){
+            setUnstakeErrorMessage(`Unstake amount must be greater than ${MIN_UNSTAKE}`);
             setTimeout(()=>{
                 setUnstakeErrorMessage('');
             },2000)
@@ -235,8 +236,9 @@ const stake = () => {
         }
         
     const handleStake = ()=>{
-        if(Number(stakeAmount) < 0.1){
-            setStakeErrorMessage("Stake Amount must be greater than 0.1");
+        const MIN_STAKE = 0.1;
+        if(Number(stakeAmount) < MIN_STAKE){
+            setStakeErrorMessage(`Stake Amount must be greater than ${MIN_STAKE}`);
             setTimeout(()=>{
                 setStakeErrorMessage('');
             }, 2000)
@@ -292,19 +294,19 @@ const stake = () => {
         });
     }
 
-    // useEffect(()=>{
-    //     const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp), library?.getSigner());
-    //     lpContract.pendingReward(account)
-    //     .then((p: ethers.BigNumber) => {
-    //     const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-    //     console.log("pending reward: " + bal);
-    //     })
-    //     .catch((e: any) => {
-    //     console.log("error" + e?.message);
-    //     });
+    useEffect(()=>{
+        const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
+        lpContract.pendingReward(account)
+        .then((p: ethers.BigNumber) => {
+        const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("pending reward: " + bal);
+        })
+        .catch((e: any) => {
+        console.log("error" + e?.message);
+        });
 
         
-    // }, [account, refreshBalances])
+    }, [account, refreshBalances])
 
     // read amount staked
     useEffect(()=>{
