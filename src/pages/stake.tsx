@@ -296,7 +296,7 @@ const stake = () => {
 
     useEffect(()=>{
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        lpContract.pendingReward("0x9B71B4Dc9E9DCeFAF0e291Cf2DC5135A862A463d")
+        lpContract.pendingReward(account)
         .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
         console.log("pending reward: " + bal);
