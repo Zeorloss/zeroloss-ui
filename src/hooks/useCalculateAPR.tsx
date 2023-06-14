@@ -27,7 +27,8 @@ import { BIG_TEN } from "../utils/bignumber";
       const priceR1 = BNBPrice * reserve1;
       const LPValue = priceR1 * 2;
       console.log(priceR1);
-      const totalLPSupply = await lpContract.totalSupply();
+      const supply = await lpContract.totalSupply();
+      const totalLPSupply = new BigNumber(supply._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
       console.log(LPValue/totalLPSupply);
       return LPValue / totalLPSupply;
     }
@@ -39,6 +40,7 @@ import { BIG_TEN } from "../utils/bignumber";
       const reserve1 = new BigNumber(y._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
       const BNBPrice = await getBNBPriceUSD();
       const priceR1 = BNBPrice * reserve1;
+      console.log(priceR1/reserve0);
       return priceR1 / reserve0;
     }
 
