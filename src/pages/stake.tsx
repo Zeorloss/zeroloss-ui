@@ -53,6 +53,7 @@ const stake = () => {
     const [stakeNFTErrorMessage, setStakeNFTErrorMessage] = useState<string>('');
     const [unstakeNFTErrorMessage, setUnstakeNFTErrorMessage] = useState<string>('');
     const [APR, setAPR] = useState<number>(0);
+    const [NFTAPR, setNFTAPR] = useState<number>(0);
 
     const { active, account, library } = useActiveWeb3React();
 
@@ -85,13 +86,11 @@ const stake = () => {
 
     useEffect(()=>{
 
-        async function calculateAPR(){
-            console.log("APY")
+        async function calculateTokenAPR(){
             const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-            
-
             const RPB = await lpContract.rewardPerBlock();
             const ar = new BigNumber(RPB._hex).toNumber();// amount of BNB in the LP CA
+            console.log(ar)
             if(ar > 0 ){
                 const AR  = ar * 10512000; 
                 const pRT = await getZLTPriceUSD();
@@ -103,6 +102,29 @@ const stake = () => {
                     const tsv = ts * pst;
                     const APR = VAR / tsv * 100; 
                     setAPR(APR);
+                }
+            }
+        }
+        calculateTokenAPR();
+    }, []);
+
+    useEffect(()=>{
+        async function calculateNFTAPR(){
+            const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
+
+            const RPB = await contractNFT.rewardPerBlock();
+            const ar = new BigNumber(RPB._hex).toNumber();// amount of BNB in the LP CA
+            console.log(ar)
+
+            if(ar > 0 ){
+                const AR  = ar * 10512000; 
+                const pRT = await getZLTPriceUSD();
+                const VAR = pRT * AR;
+                const ts = await contractNFT.totalStaked();
+
+                if(ts > 0 ){
+                    const APR = VAR / ts * 100; 
+                    setNFTAPR(APR);
                     console.log(APR);
                 } else{
                     console.log(ts);
@@ -114,8 +136,7 @@ const stake = () => {
 
 
         }
-        calculateAPR();
-
+        calculateNFTAPR();
     }, []);
 
 
@@ -583,7 +604,7 @@ const stake = () => {
                             <p className='text-base font-bold'>Staked</p>
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
-                            <span>21 %</span>
+                            <span>{NFTAPR.toFixed(2)} %</span>
                             <p className='text-base font-bold'>APY</p>
                         </div>
                         <div className='basis-3/12 grow'>
