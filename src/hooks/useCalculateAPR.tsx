@@ -13,15 +13,8 @@ import BNBPriceAbi from "../config/abi/BNBprice.json";
     async function getBNBPriceUSD() {
       const priceContract = getContract(BNBPriceAbi, addresses.BNBPrice[56], library?.getSigner());
       const price = await priceContract.GetBNBCurrentPrice();
-      console.log("price: " + price);
-      console.log("price: " + price._hex);
       const BNBPrice = new BigNumber(price._hex).div(BIG_TEN.pow(8)).toNumber();
-      console.log(BNBPrice);
-      // let BNBPrice = 0;
-      // const bnb = await fetch("https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd")
-      // const res = await bnb.json();
-      // BNBPrice = res.binancecoin.usd;
-      // console.log(BNBPrice)
+      console.log("BNBPrice: " + BNBPrice);
       return BNBPrice;
     }
         
