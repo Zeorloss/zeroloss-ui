@@ -56,6 +56,13 @@ export const addresses = {
     97: "",
     56: "0x1d1C02F9fcff7EE2073a72181caE53563C82879C",
   },
+
+  BNBPrice: {
+    97: "",
+    56: "0x0fd54afa334f843687449cf6e6241cff5f271fe6"
+  }
+
+
 };
 
 export const networkList = {
