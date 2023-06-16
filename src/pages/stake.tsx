@@ -258,6 +258,25 @@ const stake = () => {
         
     const handleStake = ()=>{
         const MIN_STAKE = 0.1;
+
+        if(!stakeAmount){
+            setStakeErrorMessage(`Invalid Input`);
+            setTimeout(()=>{
+                setStakeErrorMessage('');
+            }, 2000)
+            return;
+        }
+
+        const DECIMAL_PART =stakeAmount.toString().split('.')[1];
+        if(DECIMAL_PART?.length > 2){
+            setStakeErrorMessage(`Stake Value greater than two decimal`);
+            setTimeout(()=>{
+                setStakeErrorMessage('');
+            }, 2000)
+            return;
+        }
+
+
         if(Number(stakeAmount) < MIN_STAKE){
             setStakeErrorMessage(`Stake Amount must be greater than ${MIN_STAKE}`);
             setTimeout(()=>{
@@ -269,13 +288,13 @@ const stake = () => {
         
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
         const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        console.log("stake: " + stakeAmount)
+        console.log("Big Stake: " + value)
 
         lpContract.deposit(value)
         .then((transaction:any) => {
-            // Transaction successfully sent
             console.log("Transaction sent:", transaction.hash);
       
-            // Wait for the transaction to be confirmed
             return transaction.wait();
           })
         .then(()=>{
@@ -284,7 +303,6 @@ const stake = () => {
             console.log("stakeAMount set"); 
             setRefreshBalances(prev=>!prev);})
         .catch((e: any) => {
-            console.log("error stake: " + e?.message);
             setRefreshBalances(prev=>!prev);
             setLoadingStakeToken(false);
         });
@@ -334,10 +352,16 @@ const stake = () => {
         if(account && library){
             const getStakedAmount = async()=>{
                 const cont = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-                const [p, a] = await cont.userInfo(account)
+                const [p, a] = await cont.userInfo(account);
+                console.log("s"+ p)
+                console.log( p)
+                console.log("staked: " + p)
+                30000000000000001
+                30000000000000000
                 const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-                console.log(bal);
                 setStakedBal(bal);
+                console.log(bal);
+                return bal;
             }
             getStakedAmount();
         }
@@ -384,12 +408,12 @@ const stake = () => {
     
     const handlePercentageOfTokenBal = (percent: number) =>{
         const amount = (percent/100) * zltBal;
-        setStakeAmount(amount.toFixed(2));
+        setStakeAmount(amount);
     }
     
     const handlePercentageOfStakedToken = (percent: number) =>{
-        const amount = Number(stakedBal) * (percent/100) ;
-        setUnStakeAmount(amount.toFixed(2));
+        const amount = Number(stakedBal.toFixed(2)) * (percent/100) ;
+        setUnStakeAmount(amount);
     }
 
     const handleSelectNFTToStake= (id:number)=>{
@@ -421,8 +445,9 @@ const stake = () => {
          await contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("balances: " + bal );
-            setZltBal(bal);
+            console.log("balances: " + bal.toFixed(2) );
+            const balFixed = Number(bal.toFixed(2));
+            setZltBal(balFixed);
             return;
         })
         .catch(() => {
