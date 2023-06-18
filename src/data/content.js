@@ -34,6 +34,12 @@ export const menuItem = [
 
   },
   {
+      linkText: "Stake",
+      url: "/stake",
+      download: "false",
+
+  },
+  {
       linkText: "ZerolossPad",
       url: "/zerolosspad",
       download: "false",
