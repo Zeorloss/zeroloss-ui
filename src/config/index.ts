@@ -50,7 +50,7 @@ export const addresses = {
   },
   zltNftstaking: {
     97: "",
-    56: "0x1fa3a6EC294E5791517E4fA208122e88164E88BE",
+    56: "0xa40984640D83230EE6Fa1d912E2030f8485b9eFc",
   },
   zltnft: {
     97: "",

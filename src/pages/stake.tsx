@@ -494,7 +494,10 @@ const stake = () => {
     <Layout>
         <div className='p-4 text-white'>
             <div className='flex flex-wrap items-center justify-center'>
-                <p className=' basis-full md:basis-5/12 text-lg'>Maximize your crypto assets and earn passive income by staking ZLT and KRL, two powerful cryptocurrencies. Our platform offers you a seamless and secure way to participate in staking, enabling you to unlock the potential of your digital investments.</p>
+                <p className=' basis-full md:basis-5/12 text-lg'>
+                    Our platform offers you a seamless and secure way to participate in staking, enabling you to unlock the potential of your digital investments.
+                    Maximize your crypto assets and earn passive income by staking Zeroloss NFT, ZLT and KRL, ZLT and BUSD two powerful cryptocurrencies.
+                </p>
                 <img className='basis-full md:basis-5/12' src='/images/staking.png' alt='' />
             </div>
 
