@@ -507,7 +507,7 @@ const stake = () => {
                     <img width={100} src='/cdn/Zeroloss logo.png' alt='' />
                     <div>
                         <p className="font-semibold text-xl">ZEROLOSS</p>
-                        <p className='text-slate-400'>Staking</p>
+                        <p className='text-slate-400'>LP Mining</p>
                     </div>
                 </div>
                 <div className='text-slate-200 font-semibold  text-xl gap-4 rounded-md flex items-center justify-center flex-wrap p-4 shadow-md '>
@@ -634,7 +634,7 @@ const stake = () => {
                         </div>
                         <div className='my-4 basis-3/12 md:basis-3/12'>
                             <span>{NFTAPR.toFixed(2)} %</span>
-                            <p className='text-base font-bold'>APY</p>
+                            <p className='text-base font-bold'>APR</p>
                         </div>
                         <div className='basis-3/12 grow'>
                             <a href="https://galxe.com/Zeroloss/campaign/GCcfGUwa6P">
