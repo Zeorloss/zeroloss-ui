@@ -124,14 +124,15 @@ const stake = () => {
 
                 if(ts > 0 ){
                     const APR = VAR / ts * 100; 
+                    console.log("apr: " + APR)
                     setNFTAPR(APR);
                     console.log(APR);
                 } else{
-                    console.log(ts);
+                    console.log("ts: " + ts);
 
                 }
             }else{
-                console.log(ar);
+                console.log("ar: " + ar);
             }
 
 
@@ -314,7 +315,7 @@ const stake = () => {
         console.log(zltNFTToStakeId);
         // loadingStakeNFT
         const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
-        contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.005') })
+        contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.006') })
         .then((transaction:any) => {
             return transaction.wait();
           })
