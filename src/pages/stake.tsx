@@ -54,6 +54,7 @@ const stake = () => {
     const [unstakeNFTErrorMessage, setUnstakeNFTErrorMessage] = useState<string>('');
     const [APR, setAPR] = useState<number>(0);
     const [NFTAPR, setNFTAPR] = useState<number>(0);
+    const [BNBBal, setBNBBal] = useState<number>(0);
 
     const { active, account, library } = useActiveWeb3React();
 
@@ -61,6 +62,25 @@ const stake = () => {
         getKRLZLTContract(library?.getSigner()),
         getKrlZltLPAddress()
       );
+
+    useEffect(()=>{
+        const fetchBalance = async () => {
+            try {
+              const provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed.binance.org/'); // Binance Smart Chain provider
+                // @ts-expect-error
+              const bnbBalance = await provider.getBalance(account);
+              const formattedBalance = ethers.utils.formatEther(bnbBalance);
+              const balanceNumber = parseFloat(formattedBalance);
+        
+              console.log(balanceNumber);
+              setBNBBal(balanceNumber);
+            } catch (error) {
+              console.error('Error fetching BNB balance:', error);
+            }
+          };
+    
+          fetchBalance()
+    }, [account]);
 
     const handleApprove = async () => {
         if (account && library) {
@@ -311,6 +331,15 @@ const stake = () => {
 
     
     const handleStakeNFT = ()=>{
+        console.log(BNBBal);
+        if(BNBBal< 0.008){
+            setStakeNFTErrorMessage("Minimum BNB: 0.008");
+            setTimeout(()=>{
+                setStakeNFTErrorMessage('')
+            },2000);
+
+            return;
+        }
         setLoadingStakeNFT(true);
         console.log(zltNFTToStakeId);
         // loadingStakeNFT
