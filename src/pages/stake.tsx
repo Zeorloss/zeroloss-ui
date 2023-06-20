@@ -72,6 +72,7 @@ const stake = () => {
               const formattedBalance = ethers.utils.formatEther(bnbBalance);
               const balanceNumber = parseFloat(formattedBalance);
         
+              console.log(balanceNumber);
               setBNBBal(balanceNumber);
             } catch (error) {
               console.error('Error fetching BNB balance:', error);
@@ -88,13 +89,16 @@ const stake = () => {
             try {
                 await onApprove();
                 setIsApproved(true);
+                console.log("handleapprove success");
                 return;
             } catch (e) {
                 console.error(e);
+                console.log("handleapprove failed");
                 setIsApproved(false);
             } finally {
                 setFetching(false);
                 setLoadingApproveToken(false);
+                console.log("handleapprove finally ");
             }
         }
     }
@@ -106,6 +110,7 @@ const stake = () => {
             const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
             const RPB = await lpContract.rewardPerBlock();
             const ar = new BigNumber(RPB._hex).toNumber();// amount of BNB in the LP CA
+            console.log(ar)
             if(ar > 0 ){
                 const AR  = ar * 10512000; 
                 const pRT = await getZLTPriceUSD();
@@ -129,6 +134,7 @@ const stake = () => {
 
             const RPB = await contractNFT.rewardPerBlock();
             const ar = new BigNumber(RPB._hex).toNumber();// amount of BNB in the LP CA
+            console.log(ar)
 
             if(ar > 0 ){
                 const AR  = ar * 10512000; 
@@ -138,9 +144,18 @@ const stake = () => {
 
                 if(ts > 0 ){
                     const APR = VAR / ts * 100; 
+                    console.log("apr: " + APR)
                     setNFTAPR(APR);
+                    console.log(APR);
+                } else{
+                    console.log("ts: " + ts);
+
                 }
+            }else{
+                console.log("ar: " + ar);
             }
+
+
         }
         calculateNFTAPR();
     }, []);
@@ -156,8 +171,10 @@ const stake = () => {
               .allowance(account, getKrlZltLPAddress())
               .then(({ _hex }: any) => {
                 if (MaxUint256.eq(_hex)) {
+                    console.log("good");
                     setIsApproved(true);
                 } else {
+                    console.log("bad");
                   setIsApproved(false);
                 }
                 return MaxUint256.eq(_hex); // return promise for finally to run
@@ -187,9 +204,11 @@ const stake = () => {
             const contractNFT = getContract(zltNftAbi, addresses.zltnft[56], library?.getSigner());
             await contractNFT.approve(addresses.zltNftstaking[56], zltNFTToStakeId)
             .then((transaction:any)=>{
+                console.log('transaction sent: ' + transaction.hash);
                 return transaction.wait();
             })
             .then((response:any)=>{
+                console.log('approving smart contract:' + response);
                 setLoadingApproveNFT(false);
                 setRefreshBalances(prev=>!prev);
             })
@@ -197,12 +216,14 @@ const stake = () => {
         } catch (error) {
             setRefreshBalances(prev=>!prev)
             setLoadingApproveNFT(false);
+            console.error('Error approving smart contract:', error);
         }
     }
 
     const handleUnstakeNFT = ()=>{
         setLoadingUnstakeNFT(true)
         const contract = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
+        console.log(zltNFTToUnStakeId);
         contract.unstake(zltNFTToUnStakeId)
         .then((transaction:any) => {
             return transaction.wait();
@@ -229,20 +250,24 @@ const stake = () => {
         setLoadingUnStakeToken(true);
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
         const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        console.log("unstake: " + value)
         
         lpContract.withdraw(value)
         .then((transaction:any) => {
             // Transaction successfully sent
+            console.log("Transaction sent:", transaction.hash);
       
             // Wait for the transaction to be confirmed
             return transaction.wait();
           })
           .then((ret:any) => {
               setUnStakeAmount(0)
+              console.log("withdraw: " + ret);
               setRefreshBalances(prev=>!prev);
               setLoadingUnStakeToken(false);
             })
             .catch((e: any) => {
+                console.log("error unsatke: " + e?.message);
                 setRefreshBalances(prev=>!prev);
                 setLoadingUnStakeToken(false);
                 setUnstakeErrorMessage(e?.message);
@@ -283,16 +308,20 @@ const stake = () => {
         setLoadingStakeToken(true);
         
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18));
+        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        console.log("stake: " + stakeAmount)
+        console.log("Big Stake: " + value)
 
         lpContract.deposit(value)
         .then((transaction:any) => {
+            console.log("Transaction sent:", transaction.hash);
       
             return transaction.wait();
           })
         .then(()=>{
             setLoadingStakeToken(false);
             setStakeAmount(0); 
+            console.log("stakeAMount set"); 
             setRefreshBalances(prev=>!prev);})
         .catch((e: any) => {
             setRefreshBalances(prev=>!prev);
@@ -302,6 +331,7 @@ const stake = () => {
 
     
     const handleStakeNFT = ()=>{
+        console.log(BNBBal);
         if(BNBBal< 0.008){
             setStakeNFTErrorMessage("Minimum BNB: 0.008");
             setTimeout(()=>{
@@ -311,6 +341,7 @@ const stake = () => {
             return;
         }
         setLoadingStakeNFT(true);
+        console.log(zltNFTToStakeId);
         // loadingStakeNFT
         const contractNFT = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
         contractNFT.stake(zltNFTToStakeId, { value: ethers.utils.parseEther('0.006') })
@@ -318,6 +349,7 @@ const stake = () => {
             return transaction.wait();
           })
         .then((r:any)=>{ 
+            console.log("stakeAMount set" + r );
             setRefreshBalances(prev=>!prev);
             setLoadingStakeNFT(false);
     })
@@ -336,9 +368,11 @@ const stake = () => {
         lpContract.pendingReward(account)
         .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+        console.log("pending reward: " + bal);
         setPendingReward(bal);
         })
         .catch((e: any) => {
+        console.log("error" + e?.message);
         });
 
     }, [account, refreshBalances])
@@ -349,8 +383,14 @@ const stake = () => {
             const getStakedAmount = async()=>{
                 const cont = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
                 const [p, a] = await cont.userInfo(account);
+                console.log("s"+ p)
+                console.log( p)
+                console.log("staked: " + p)
+                30000000000000001
+                30000000000000000
                 const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
                 setStakedBal(bal);
+                console.log(bal);
                 return bal;
             }
             getStakedAmount();
@@ -363,6 +403,10 @@ const stake = () => {
             const getStakedAmount = async()=>{
                 const cont = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
                 const [bal, id, reward] = await cont.getUserPoolInfo(account)
+                
+                console.log("x: " + bal);
+                console.log("y: " + id);
+                console.log("z: " + reward);
                 setPendingNFTReward(reward);
                 setZltNFTStakedId(id);
                 handleSelectNFTToUnStake(id[0]);
@@ -381,8 +425,10 @@ const stake = () => {
         lpContract.deposit(account, 0)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log("deposit fn: " + bal);
         })
         .catch(() => {
+            console.log("error");
         })
         .finally(()=>{
             setRefreshBalances(prev=>!prev);
@@ -410,25 +456,32 @@ const stake = () => {
                 setNftApproval(true);
             }else{
                 setNftApproval(false);
+                console.log("not aproved");
             }
         }).
         catch((e:any)=>{
+            console.log("error approval: "+ e)
         })
     }
     const handleSelectNFTToUnStake= (id:number)=>setZltNFTToUnStakeId(id);
     
     useEffect(()=>{
+        // console.log(library);
        if(account && library){
         const handleGetBal = async ()=>{
+            console.log(account)
+        console.log("acct: " + account)
         const contract = getContract(erc20, addresses.krlzlt[56], library?.getSigner())
          await contract.balanceOf(account)
         .then((p: ethers.BigNumber) => {
             const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+            console.log("balances: " + bal.toFixed(2) );
             const balFixed = Number(bal.toFixed(2));
             setZltBal(balFixed);
             return;
         })
         .catch(() => {
+            console.log("bal erro");
         setZltBal(0);
         });
         }
@@ -451,6 +504,7 @@ const stake = () => {
             contractNFT.walletOfOwner(account)
             .then((ownedNfts:number[]) => {
                 setZltNFTBal(ownedNfts);
+                console.log("NFT fetch success");
                 if (ownedNfts.length > 0) {
                     handleSelectNFTToStake(ownedNfts[0]);
                 }
