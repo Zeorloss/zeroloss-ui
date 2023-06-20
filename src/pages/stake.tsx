@@ -308,7 +308,7 @@ const stake = () => {
         setLoadingStakeToken(true);
         
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toNumber;
         console.log("stake: " + stakeAmount)
         console.log("Big Stake: " + value)
 
