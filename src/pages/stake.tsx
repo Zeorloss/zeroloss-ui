@@ -249,7 +249,7 @@ const stake = () => {
         }
         setLoadingUnStakeToken(true);
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        const value = new BigNumber(unStakeAmount).times(BIG_TEN.pow(18)).toFixed();
         console.log("unstake: " + value)
         
         lpContract.withdraw(value)
@@ -308,7 +308,11 @@ const stake = () => {
         setLoadingStakeToken(true);
         
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
-        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toJSON();
+        const value = new BigNumber(stakeAmount).times(BIG_TEN.pow(18)).toFixed();
+//         const BIG_TEN = new BigNumber(10);
+// const value = new BigNumber(stakeAmount)
+//   .times(BIG_TEN.pow(18))
+//   .toFixed();
         console.log("stake: " + stakeAmount)
         console.log("Big Stake: " + value)
 
@@ -324,6 +328,7 @@ const stake = () => {
             console.log("stakeAMount set"); 
             setRefreshBalances(prev=>!prev);})
         .catch((e: any) => {
+            console.log(e)
             setRefreshBalances(prev=>!prev);
             setLoadingStakeToken(false);
         });
