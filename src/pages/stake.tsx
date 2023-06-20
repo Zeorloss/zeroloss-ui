@@ -277,7 +277,7 @@ const stake = () => {
             });
         }
         
-    const handleStake = ()=>{
+    const handleStake = async()=>{
         const MIN_STAKE = 0.1;
 
         if(!stakeAmount){
@@ -312,7 +312,7 @@ const stake = () => {
         console.log("stake: " + stakeAmount)
         console.log("Big Stake: " + value)
 
-        lpContract.deposit(value)
+        await lpContract.deposit(value)
         .then((transaction:any) => {
             console.log("Transaction sent:", transaction.hash);
       
