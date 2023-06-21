@@ -18,17 +18,30 @@ import BNBPriceAbi from "../config/abi/BNBprice.json";
       return BNBPrice;
     }
         
+    // async function getLPPriceUSD(){
+    //   const lpContract = getContract(pancakePairAbi, addresses.krlBNBLP[56], library?.getSigner());
+    //   const [x, y, _temp] = await lpContract.getReserves();
+    //   const reserve1 = new BigNumber(y._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
+    //   const BNBPrice = await getBNBPriceUSD();
+    //   const priceR1 = BNBPrice * reserve1;
+    //   const LPValue = priceR1 * 2;
+    //   const supply = await lpContract.totalSupply();
+    //   const totalLPSupply = new BigNumber(supply._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
+    //   return LPValue / totalLPSupply;
+    // }
+
     async function getLPPriceUSD(){
-      // const {library} = useActiveWeb3React();
-      const lpContract = getContract(pancakePairAbi, addresses.krlBNBLP[56], library?.getSigner());
+      const lpContract = getContract(pancakePairAbi, addresses.krlzlt[56], library?.getSigner());
       const [x, y, _temp] = await lpContract.getReserves();
-      const reserve1 = new BigNumber(y._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
-      const BNBPrice = await getBNBPriceUSD();
-      const priceR1 = BNBPrice * reserve1;
-      const LPValue = priceR1 * 2;
+      const reserve0 = new BigNumber(x._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
+      const ZLTPrice = await getZLTPriceUSD();
+      const LPValue = (ZLTPrice * reserve0) * 2;
       const supply = await lpContract.totalSupply();
       const totalLPSupply = new BigNumber(supply._hex).times(BIG_TEN.pow(18)).toNumber();// amount of BNB in the LP CA
+      console.log("lpvALUE: " + LPValue)
+      console.log("total: " + totalLPSupply)
       return LPValue / totalLPSupply;
+
     }
     
     async function getZLTPriceUSD(){

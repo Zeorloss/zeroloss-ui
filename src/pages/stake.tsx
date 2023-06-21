@@ -369,6 +369,7 @@ const stake = () => {
         lpContract.pendingReward(account)
         .then((p: ethers.BigNumber) => {
         const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
+
         console.log("pending reward: " + bal);
         setPendingReward(bal);
         })
@@ -405,10 +406,12 @@ const stake = () => {
                 const cont = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
                 const [bal, id, reward] = await cont.getUserPoolInfo(account)
                 
+                const valueToBig = new BigNumber(reward._hex).div(BIG_TEN.pow(18)).toNumber();
                 console.log("x: " + bal);
                 console.log("y: " + id);
-                console.log("z: " + reward);
-                setPendingNFTReward(reward);
+                console.log("z: " + valueToBig);
+
+                setPendingNFTReward(valueToBig);
                 setZltNFTStakedId(id);
                 handleSelectNFTToUnStake(id[0]);
             }
@@ -430,6 +433,23 @@ const stake = () => {
         })
         .catch(() => {
             console.log("error");
+        })
+        .finally(()=>{
+            setRefreshBalances(prev=>!prev);
+            setLoadingHarvestToken(false);
+        });
+    }
+    
+    const handleHarvestNFT = () =>{
+        setLoadingHarvestToken(true);
+        const lpContract = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
+
+        lpContract.claimReward()
+        .then(() => {
+            console.log("harvesting nft");
+        })
+        .catch(() => {
+            console.log("error harvest NFT");
         })
         .finally(()=>{
             setRefreshBalances(prev=>!prev);
@@ -745,7 +765,7 @@ const stake = () => {
                         <div className='basis-full text-lg lg:basis-[30%] text-center'>
                             <p>Pending Reward</p>
                             <p className='font-bold my-2'>{pendingNFTReward.toString()} ZLT</p>
-                            <button className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
+                            <button onClick={handleHarvestNFT} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
                         </div>
                     </div>
                 
