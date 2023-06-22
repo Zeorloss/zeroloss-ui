@@ -47,7 +47,7 @@ export const menuItem = [
   },
   {
       linkText: "Rug Checker",
-      url: "https://scamsniper.net",
+      url: "https://tokensniffer.com",
       download: "false",
 
   },
