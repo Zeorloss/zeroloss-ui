@@ -46,6 +46,7 @@ const stake = () => {
     const [pendingReward, setPendingReward] = useState<number>(0);
     const [pendingNFTReward, setPendingNFTReward] = useState<number>(0);
     const [loadingHarvestToken, setLoadingHarvestToken] = useState<boolean>(false);
+    const [loadingHarvestNFT, setLoadingHarvestNFT] = useState<boolean>(false);
     const [refreshBalances, setRefreshBalances] = useState<boolean>(false);
     const [stakeErrorMessage, setStakeErrorMessage] = useState<string>('');
     const [approveErrorMessage, setApproveErrorMessage] = useState<string>('');
@@ -422,15 +423,11 @@ const stake = () => {
     }, [account, library, refreshBalances]);
 
     
-    const handleHarvest = () =>{
+    const handleHarvest = async() =>{
         setLoadingHarvestToken(true);
         const lpContract = getContract(zltkrllp, addresses.zltkrlstakinglp[56], library?.getSigner());
 
-        lpContract.deposit(account, 0)
-        .then((p: ethers.BigNumber) => {
-            const bal = new BigNumber(p._hex).div(BIG_TEN.pow(18)).toNumber();
-            console.log("deposit fn: " + bal);
-        })
+        await lpContract.deposit(0)
         .catch(() => {
             console.log("error");
         })
@@ -441,7 +438,7 @@ const stake = () => {
     }
     
     const handleHarvestNFT = () =>{
-        setLoadingHarvestToken(true);
+        setLoadingHarvestNFT(true);
         const lpContract = getContract(zltNftPool, addresses.zltNftstaking[56], library?.getSigner());
 
         lpContract.claimReward()
@@ -453,7 +450,7 @@ const stake = () => {
         })
         .finally(()=>{
             setRefreshBalances(prev=>!prev);
-            setLoadingHarvestToken(false);
+            setLoadingHarvestNFT(false);
         });
     }
     
@@ -661,7 +658,7 @@ const stake = () => {
                     <div className='basis-full text-lg lg:basis-[30%] text-center'>
                         <p>Pending Reward</p>
                         <p className='font-bold my-2'>{pendingReward.toFixed(2)} ZLT</p>
-                        <button onClick={handleHarvest} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest{loadingHarvestToken ? <TailSpin width={30} height={30} color="white" /> :""}</button>
+                        <button onClick={handleHarvest} className='px-4 py-3 rounded bg-white text-black font-bold m-auto flex items-center gap-2 my-4'>Harvest{loadingHarvestToken ? <TailSpin width={30} height={30} color="black" /> :""}</button>
                     </div>
                 </div>
             </div>
@@ -765,11 +762,13 @@ const stake = () => {
                         <div className='basis-full text-lg lg:basis-[30%] text-center'>
                             <p>Pending Reward</p>
                             <p className='font-bold my-2'>{pendingNFTReward.toString()} ZLT</p>
-                            <button onClick={handleHarvestNFT} className='px-4 py-3 tounded bg-white text-black font-bold'>Harvest</button>
+                            <button onClick={handleHarvestNFT} className='px-4 py-3 tounded bg-white text-black font-bold m-auto flex items-center gap-2 my-4'>Harvest {loadingHarvestNFT ? <TailSpin width={30} height={30} color="black" /> :""}</button>
                         </div>
                     </div>
                 
             </div>
+
+            <iframe width="100%" height="172" frameBorder="0" scrolling="no" src="https://coinbrain.com/coins/bnb-0x05d8762946fa7620b263e1e77003927addf5f7e6/ticker?theme=custom&background=ffffff&padding=16&type=medium&currency=USD&blocks=price%2CmarketCap%2Cvolume24h"></iframe>
         </div>
     </Layout>
   )
