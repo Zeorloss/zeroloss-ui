@@ -22,19 +22,19 @@ export const addresses = {
   },
   zlt: {
     56: "0x05D8762946fA7620b263E1e77003927addf5f7E6",
-    97: ""
+    97: "",
   },
   krlBNBLP: {
     56: "0xAb168a06623eDe1b6b590733952cca4d7123f1F5",
-    97: ""
+    97: "",
   },
   cfycSale: {
     56: "0xa600214DeD3243C810e15Bbc484C98D02A7b66ea",
-    97: ""
+    97: "",
   },
   cfyc: {
     56: "0x03B6119662292b6BBecFc432B799a82Ae9157f12",
-    97: ''
+    97: "",
   },
   krlzlt: {
     97: "",
@@ -59,10 +59,8 @@ export const addresses = {
 
   BNBPrice: {
     97: "",
-    56: "0x0fd54afa334f843687449cf6e6241cff5f271fe6"
-  }
-
-
+    56: "0x0fd54afa334f843687449cf6e6241cff5f271fe6",
+  },
 };
 
 export const networkList = {
@@ -101,10 +99,10 @@ export const networkList = {
 };
 
 export enum GAS_PRICE {
-  default = "5",
-  fast = "6",
-  instant = "7",
-  testnet = "10",
+  default = "3",
+  fast = "4",
+  instant = "5",
+  testnet = "7",
 }
 
 export const GAS_PRICE_GWEI = {
