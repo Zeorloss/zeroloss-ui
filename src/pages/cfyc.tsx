@@ -369,14 +369,14 @@ const BuyPage = () => {
 
   return (
     <Layout>
-      <div className="flex justify-center items-center mt-10">
-        <section className="bg-white p-5 md:p-10 w-full max-w-screen-md">
+      <div className="flex items-center justify-center mt-10">
+        <section className="w-full max-w-screen-md p-5 bg-white md:p-10">
           <section className="text-[#1E50BC] px-8 md:max-w-[80%] m-auto py-10">
-            <h1 className="text-5xl text-center font-bold mb-10 leading-slug">
+            <h1 className="mb-10 text-5xl font-bold text-center leading-slug">
               Cryptofy Private Sale.
             </h1>
-            <section className="text-center space-y-5 relative text-xl">
-              <div className="space-y-5 relative">
+            <section className="relative space-y-5 text-xl text-center">
+              <div className="relative space-y-5">
                 <p className="max-w-lg mx-auto font-bold">BUY $CFYC</p>
                 <button className="w-30 m-auto p-3 rounded-full text-base hover:bg-white bg-[#1E50BC] text-white hover:text-black" onClick={()=> addTokenToMetaMask()}>Add CFYC Token</button>
 
@@ -392,12 +392,12 @@ const BuyPage = () => {
                 {zltBal < zltThreshold && (
                   <Link
                     to="/swap"
-                    className="text-base underline hover:no-underline transition-all duration-300"
+                    className="text-base underline transition-all duration-300 hover:no-underline"
                   >
                     Insufficient ZLT, get some!
                   </Link>
                 )}
-                <div className="bg p-5 max-w-sm space-y-3 mx-auto rounded">
+                <div className="max-w-sm p-5 mx-auto space-y-3 rounded bg">
                   {active && isApproved && (
                     <TextInput
                       errorMsg={errorMsg}
@@ -434,25 +434,25 @@ const BuyPage = () => {
               {contractBal && (
                 <>
                   <p className="font-bold">Token Sale Progress.</p>
-                  <div className="relative h-7 w-full md:w-6/12 m-auto bg-white overflow-hidden  rounded-lg">
+                  <div className="relative w-full m-auto overflow-hidden bg-white rounded-lg h-7 md:w-6/12">
                     <div
                       className={`h-full absolute top-0 px-4 bg-[#1E50BC]`}
                       style={{ width: `${contractBal}%` }}
                     ></div>
-                    <p className="text-black text-center block m-auto font-bold">{`${contractBal}%`}</p>
+                    <p className="block m-auto font-bold text-center text-black">{`${contractBal}%`}</p>
                   </div>
                 </>
               )}
               {records.length > 0 && (
-                <div className="mt-10 pt-10">
-                  <h2 className="font-bold my-5">Token Vesting Schedule</h2>
-                  <div className="flex justify-center gap-4 flex-wrap max-w-screen-md">
+                <div className="pt-10 mt-10">
+                  <h2 className="my-5 font-bold">Token Vesting Schedule</h2>
+                  <div className="flex flex-wrap justify-center max-w-screen-md gap-4">
                     {records.map((id, index) => (
                       <p key={id} className="p-1 text-sm">
                         Vesting {index + 1}:{" "}
                         <a
                           href={`https://safe.kimberlite.rocks/56/${id}`}
-                          className="underline text-base font-bold transition-all hover:no-underline hover:scale-110"
+                          className="text-base font-bold underline transition-all hover:no-underline hover:scale-110"
                           target="_blank"
                         >
                           View
@@ -519,8 +519,8 @@ const TextInput = ({
   }, [library, account, fast, active]);
 
   return (
-    <div className="w-full space-y-2 mx-auto">
-      <div className="p-3 rounded-lg transition-transform duration-200 ease-linear">
+    <div className="w-full mx-auto space-y-2">
+      <div className="p-3 transition-transform duration-200 ease-linear rounded-lg">
         <div>
           <div className="mb-2 text-xs font-light text-left">Amount</div>
           <div className="relative flex items-center justify-between space-x-1">
@@ -583,7 +583,7 @@ const TextInput = ({
       </div>
       <CustomButton
         onClick={onSubmit}
-        className="block mx-auto w-full"
+        className="block w-full mx-auto"
         disabled={isDisabled}
         loading={trx}
         variant="primary"
